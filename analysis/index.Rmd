@@ -8,4 +8,8 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+Revision for rare variant project
+
+[Annotating rare variants](variant_annot.html)
+
+

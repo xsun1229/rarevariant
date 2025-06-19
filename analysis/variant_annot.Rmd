@@ -1,0 +1,78 @@
+---
+title: "Annotating rare variants"
+author: "XSun"
+date: "2025-06-19"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+---
+
+# Introduction
+
+We annotate the rare variants we collected using reviewer recommended scores 
+
+```{r}
+library(data.table)
+
+mirage_input <- fread("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt",header = T)
+
+#DT::datatable(mirage_input,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','MIRAGE input -- initial submission'),options = list(pageLength = 10) )
+
+group_labels <- c("highPLI", "medPLI", "lowPLI", "highMPC", "medMPC", "lowMPC")
+mirage_input[, group := group_labels[group.index]]
+
+print('MIRAGE input -- initial submission')
+print(head(mirage_input))
+
+table(mirage_input$group)[group_labels]
+```
+
+
+# Alpha-missense score
+
+Alpha-missense score download: https://console.cloud.google.com/storage/browser/dm_alphamissense;tab=objects?pli=1&inv=1&invt=Ab0dvQ&prefix=&forceOnObjectsSortingFiltering=false
+
+Paper: https://www.science.org/doi/10.1126/science.adg7492
+
+```{bash, eval=FALSE, echo=T}
+zcat AlphaMissense_hg38.tsv.gz |head
+# Copyright 2023 DeepMind Technologies Limited
+#
+# Licensed under CC BY-NC-SA 4.0 license
+CHROM  POS     REF     ALT     genome  uniprot_id      transcript_id   protein_variant am_pathogenicity        am_class
+chr1    69094   G       T       hg38    Q8NH21  ENST00000335137.4       V2L     0.2937  likely_benign
+chr1    69094   G       C       hg38    Q8NH21  ENST00000335137.4       V2L     0.2937  likely_benign
+chr1    69094   G       A       hg38    Q8NH21  ENST00000335137.4       V2M     0.3296  likely_benign
+chr1    69095   T       C       hg38    Q8NH21  ENST00000335137.4       V2A     0.2609  likely_benign
+chr1    69095   T       A       hg38    Q8NH21  ENST00000335137.4       V2E     0.2922  likely_benign
+```
+
+```
+| Category          | Min pathogenicity | Max pathogenicity | Total Variants |
+|-------------------|-----------|-----------|----------------|
+| likely_pathogenic | 0.5640    | 1.0000    | 22,770,557     |
+| likely_benign     | 0.0001    | 0.3400    | 40,917,351     |
+| ambiguous         | 0.3400    | 0.5640    | 8,009,648      |
+```
+
+
+```{r}
+mirage_amsocre <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_amscores.RDS")
+mirage_amsocre <- as.data.table(mirage_amsocre)
+mirage_amsocre <- mirage_amsocre[,-c("key")]
+mirage_amsocre[, old_group := group_labels[group.index]]
+
+oldlofmisnow <- mirage_amsocre[!is.na(am_class) & group.index %in% 1:3]
+
+DT::datatable(oldlofmisnow,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Variants annotated as LoF before but missense now'),options = list(pageLength = 5) )
+
+oldmisnanow <- mirage_amsocre[is.na(am_class) & group.index %in% 4:6]
+
+DT::datatable(oldmisnanow,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Variants annotated as missense before but have no am_pathogenicity now'),options = list(pageLength = 5) )
+
+mirage_amsocre[!is.na(am_class), old_group := am_class]
+table(mirage_amsocre$old_group)[c("highPLI","medPLI","lowPLI","likely_pathogenic","ambiguous","likely_benign")]
+
+```
+
