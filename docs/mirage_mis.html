@@ -390,7 +390,7 @@ updated</h1>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -401,8 +401,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -415,9 +415,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>rarevariant/</code> <span
@@ -440,21 +440,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -545,15 +542,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree35b59e77f7baf6b91041b1614eafb0dcc2bebb69targetblank35b59e7a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree4b92a42e3a0888ba1e9c1f10b8ef796a31205085targetblank4b92a42a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/xsun1229/rarevariant/tree/35b59e77f7baf6b91041b1614eafb0dcc2bebb69" target="_blank">35b59e7</a>
+<a href="https://github.com/xsun1229/rarevariant/tree/4b92a42e3a0888ba1e9c1f10b8ef796a31205085" target="_blank">4b92a42</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree35b59e77f7baf6b91041b1614eafb0dcc2bebb69targetblank35b59e7a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree4b92a42e3a0888ba1e9c1f10b8ef796a31205085targetblank4b92a42a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -563,7 +560,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/xsun1229/rarevariant/tree/35b59e77f7baf6b91041b1614eafb0dcc2bebb69" target="_blank">35b59e7</a>.
+<a href="https://github.com/xsun1229/rarevariant/tree/4b92a42e3a0888ba1e9c1f10b8ef796a31205085" target="_blank">4b92a42</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,13 +574,7 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Ignored files:
-    Ignored:    analysis/figure/
-
-Unstaged changes:
-    Modified:   analysis/mirage_lofmis.Rmd
-    Modified:   analysis/mirage_mis.Rmd
-
+working directory clean
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not
@@ -628,6 +619,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/4b92a42e3a0888ba1e9c1f10b8ef796a31205085/analysis/mirage_mis.Rmd" target="_blank">4b92a42</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+<td>
+update
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/xsun1229/rarevariant/4b92a42e3a0888ba1e9c1f10b8ef796a31205085/docs/mirage_mis.html" target="_blank">4b92a42</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+<td>
+update
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1036,6 +1061,43 @@ p &lt;- ggplot(long_df, aes(x = factor(category, levels = order), y = value, fil
 
 print(p)</code></pre>
 <p><img src="figure/mirage_mis.Rmd/unnamed-chunk-7-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/4b92a42e3a0888ba1e9c1f10b8ef796a31205085/docs/figure/mirage_mis.Rmd/unnamed-chunk-7-1.png" target="_blank">4b92a42</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
