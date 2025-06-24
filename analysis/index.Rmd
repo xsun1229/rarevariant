@@ -12,4 +12,8 @@ Revision for rare variant project
 
 [Annotating rare variants](variant_annot.html)
 
+[MIRAGE results -- missense annotation updated](mirage_mis.html)
+
+[MIRAGE results -- lof & missense annotation updated](mirage_lofmis.html)
+
 

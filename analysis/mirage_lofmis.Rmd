@@ -1,0 +1,226 @@
+---
+title: "MIRAGE results -- lof & missense annotation updated"
+author: "XSun"
+date: "2025-06-23"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+---
+
+```{r, warning=F, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(ggrepel)
+library(data.table)
+
+mirage_res <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_lofmisupdated.RDS")
+
+cat <- c("high LOEUF oe", "med LOEUF oe", "low LOEUF oe", "likely pathogenic", "ambiguous", "likely benign")
+# cat <- c("highPLI", "medPLI", "lowPLI", "likely pathogenic", "ambiguous", "likely benign")
+
+```
+
+# Overview of input
+
+```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}
+
+input <- fread("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt")
+print("Old mirage input:")
+
+sprintf("Number of rare-variants = %s",nrow(input))
+old_mirage <- table(input$group.index)[c("1","2","3","4","5","6")]
+names(old_mirage) <- c("highPLI", "medPLI", "lowPLI", "highMPC", "medMPC", "lowMPC")
+print(old_mirage)
+
+print("LoF & Missense updated mirage input:")
+mirage_input_mis_updated <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_lofmis_updated.RDS")
+new_mirage <- table(mirage_input_mis_updated$group.index)[c("1","2","3","4","5","6")]
+names(new_mirage) <- cat
+sprintf("Number of rare-variants = %s",nrow(mirage_input_mis_updated))
+print(new_mirage)
+```
+
+
+# Parameter estimation
+
+```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}
+est <- mirage_res$eta.est[c("1","2","3","4","5","6")]
+names(mirage_res$eta.pvalue) <- names(mirage_res$eta.est)
+pval <- mirage_res$eta.pvalue[c("1","2","3","4","5","6")]
+
+
+order <- c(1:length(est))
+
+df <- data.frame(est = est, pval = pval, cat = cat, order=order)
+df <- df[sort(df$order,decreasing = T),]
+df$cat <- factor(df$cat, levels = cat)
+
+df$fill <- ifelse(df$order <= 3, "orange", "steelblue")
+df$legend <- ifelse(df$order <= 3, "LoF", "Missense")
+
+# Convert the legend column to a factor and set the levels
+df$legend <- factor(df$legend, levels = c("LoF", "Missense"))
+
+p <- ggplot(df, aes(x = cat, y = est, fill = legend)) +
+  geom_bar(stat = "identity", width = 0.6) + # Use the fill aesthetic
+  geom_text(aes(label = ifelse(pval < 0.05, "*", "")), vjust = 0, size = 6) +
+  annotate("text", x = 6, y = 0.9, label = "*: p-value < 0.05", hjust = "right", size = 6) +
+  theme_minimal() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    legend.title = element_blank() # Hide the legend title
+  ) +
+  scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+  scale_fill_manual(values = c("LoF" = "orange", "Missense" = "steelblue")) # Define manual colors for the legend
+
+print(p)
+
+```
+
+
+# Gene-level results
+
+## Posterior probability, FDR 
+
+```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
+
+gene_pip <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_lofmisupdated.RDS")
+
+DT::datatable(gene_pip,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Gene-level results'),options = list(pageLength = 10) )
+
+```
+
+
+## Manhattan plot
+
+```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
+
+pp_threshold <- 0.7
+
+don <- gene_pip %>% 
+  
+  # Compute chromosome size
+  group_by(chr) %>% 
+  summarise(chr_len=max(pos)) %>% 
+  
+  # Calculate cumulative position of each chromosome
+  mutate(tot=cumsum(as.numeric(chr_len))-as.numeric(chr_len)) %>%
+  dplyr::select(-chr_len) %>%
+  
+  # Add this info to the initial dataset
+  left_join(gene_pip, ., by=c("chr"="chr")) %>%
+  
+  # Add a cumulative position of each SNP
+  arrange(chr, pos) %>%
+  mutate( poscum=pos+tot) %>%
+  mutate( is_annotate=ifelse(Gene %in% gene_pip$Gene[gene_pip$post_prob > pp_threshold], "yes", "no"))
+
+# Then we need to prepare the X axis. Indeed we do not want to display the cumulative position of SNP in bp, but just show the chromosome name instead.
+axisdf = don %>% group_by(chr) %>% summarize(center=( max(poscum) + min(poscum) ) / 2 )
+
+manhplot <- ggplot(don, aes(x=poscum, y=post_prob)) +
+  
+  # Show all points
+  geom_point( aes(color=as.factor(chr)), alpha=2, size=3) +
+  scale_color_manual(values = rep(c("grey", "steelblue"), 22 )) +
+  
+  # custom X axis:
+  scale_x_continuous( label = axisdf$chr, breaks= axisdf$center ) +
+  #scale_y_continuous(expand = c(0, 0) ) +     # remove space between plot area and x axis
+  
+  ylab("Posterior Probability") +
+  #ylim(0,max(log10(don$BF)) + 2) +
+  ylim(0,1) +
+  xlab("Chromosome") +
+  
+  geom_hline(yintercept = pp_threshold, col = "red") +
+  annotate("text", x = Inf, y = pp_threshold, label = sprintf("PP = %s", pp_threshold), hjust = 1.1, vjust = -1, color = "red", size = 7) +
+  
+  # Custom the theme:
+  theme_bw() +
+  #ggtitle(i) + theme(plot.title = element_text(hjust = 0.5)) +
+  theme( 
+    legend.position="none",
+    panel.border = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    axis.title.x = element_text(size = 28),
+    axis.text.x = element_text(size = 26, color = "black"),
+    axis.title.y = element_text(size = 28),
+    axis.text.y = element_text(size = 26, color = "black"),
+  ) +
+  geom_label_repel( data=subset(don, is_annotate=="yes"), aes(label=Gene), size=7)
+
+
+print(manhplot)
+
+```
+
+
+## BF partition
+
+
+```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
+
+dat <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/BFpartition_lofmisupdated.RDS")
+
+dat_select <- dat[dat$PP > 0.5 & !is.na(dat$PP),]
+dat_select <- dat_select[,c("Gene","BF","g1_BF","g2_BF","g3_BF","g4_BF","g5_BF","g6_BF")]
+dat_select <- dat_select[order(dat_select$BF, decreasing = T),]
+
+dat_select$logbf <- log2(dat_select$BF)
+dat_select$g1_BF <- log2(as.numeric(dat_select$g1_BF))
+dat_select$g2_BF <- log2(as.numeric(dat_select$g2_BF))
+dat_select$g3_BF <- log2(as.numeric(dat_select$g3_BF))
+dat_select$g4_BF <- log2(as.numeric(dat_select$g4_BF))
+dat_select$g5_BF <- log2(as.numeric(dat_select$g5_BF))
+dat_select$g6_BF <- log2(as.numeric(dat_select$g6_BF))
+
+colnames(dat_select)[3:8] <- cat
+
+
+dat_select[is.na(dat_select)] <- 0
+#dat_select[dat_select < 0] <- 0
+dat_select[,2:ncol(dat_select)] <- abs(dat_select[,2:ncol(dat_select)])
+
+# #abs
+# numeric_columns <- sapply(dat_select, is.numeric)
+# for (col in names(dat_select)[numeric_columns]) {
+#   dat_select[[col]] <- ifelse(dat_select[[col]] < 0, abs(dat_select[[col]]), dat_select[[col]])
+# }
+
+dat_select$sum_bf <- rowSums(dat_select[,3:8])
+dat_select$Gene <- factor(dat_select$Gene, levels = dat_select$Gene)
+
+df_long <- dat_select %>%
+  dplyr::select(Gene, `high LOEUF oe`, `med LOEUF oe`, `low LOEUF oe`,  `likely pathogenic`, ambiguous, `likely benign`) %>%
+  tidyr::pivot_longer(cols = -Gene, names_to = "variant_type", values_to = "value")
+
+
+colnames(df_long)[2] <- "Variant Group"
+df_long$`Variant Group` <- factor(df_long$`Variant Group`, levels = cat)
+
+# Now plot using ggplot
+p <- ggplot(df_long, aes(x = Gene, y = value, fill = `Variant Group`)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(#title = "BF and variant type per gene", 
+       y = expression(log[2]*"BF"),
+       x = paste(nrow(dat_select),"genes with PP > 0.5")) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12), 
+    axis.text.y = element_text(size = 12), 
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+  ) +
+  #scale_fill_manual(values = c("#B22222", "#FF8C00", "#FFD700","#4682B4","#5F9EA0","#87CEFA"))
+  scale_fill_manual(values = palette()[2:7])
+
+print(p)
+```
+
+
