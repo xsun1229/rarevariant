@@ -449,10 +449,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -545,15 +545,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree99e1744a997afe2f61d3953e0442ade0fab4c18ctargetblank99e1744a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree35b59e77f7baf6b91041b1614eafb0dcc2bebb69targetblank35b59e7a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/xsun1229/rarevariant/tree/99e1744a997afe2f61d3953e0442ade0fab4c18c" target="_blank">99e1744</a>
+<a href="https://github.com/xsun1229/rarevariant/tree/35b59e77f7baf6b91041b1614eafb0dcc2bebb69" target="_blank">35b59e7</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree99e1744a997afe2f61d3953e0442ade0fab4c18ctargetblank99e1744a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree35b59e77f7baf6b91041b1614eafb0dcc2bebb69targetblank35b59e7a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -563,7 +563,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/xsun1229/rarevariant/tree/99e1744a997afe2f61d3953e0442ade0fab4c18c" target="_blank">99e1744</a>.
+<a href="https://github.com/xsun1229/rarevariant/tree/35b59e77f7baf6b91041b1614eafb0dcc2bebb69" target="_blank">35b59e7</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,12 +577,9 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Untracked files:
-    Untracked:  analysis/mirage_lofmis.Rmd
-    Untracked:  analysis/mirage_mis.Rmd
-
 Unstaged changes:
-    Modified:   analysis/index.Rmd
+    Modified:   analysis/mirage_lofmis.Rmd
+    Modified:   analysis/mirage_mis.Rmd
 
 </code></pre>
 <p>
@@ -597,10 +594,74 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/mirage_lofmis.Rmd</code>) and
+HTML (<code>docs/mirage_lofmis.html</code>) files. If you’ve configured
+a remote Git repository (see <code>?wflow_git_remote</code>), click on
+the hyperlinks in the table below to view the files as they were in that
+past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/analysis/mirage_lofmis.Rmd" target="_blank">35b59e7</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+<td>
+update
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/xsun1229/rarevariant/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/mirage_lofmis.html" target="_blank">35b59e7</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+<td>
+update
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -609,6 +670,7 @@ There are no past versions. Publish this analysis with
 library(dplyr)
 library(ggrepel)
 library(data.table)
+library(tidyr)
 
 mirage_res &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_lofmisupdated.RDS&quot;)
 
@@ -675,6 +737,43 @@ p &lt;- ggplot(df, aes(x = cat, y = est, fill = legend)) +
 
 print(p)</code></pre>
 <p><img src="figure/mirage_lofmis.Rmd/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_lofmis.Rmd/unnamed-chunk-3-1.png" target="_blank">35b59e7</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="gene-level-results" class="section level1">
 <h1>Gene-level results</h1>
@@ -747,6 +846,43 @@ manhplot &lt;- ggplot(don, aes(x=poscum, y=post_prob)) +
 
 print(manhplot)</code></pre>
 <p><img src="figure/mirage_lofmis.Rmd/unnamed-chunk-5-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_lofmis.Rmd/unnamed-chunk-5-1.png" target="_blank">35b59e7</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="bf-partition" class="section level2">
 <h2>BF partition</h2>
@@ -806,6 +942,98 @@ p &lt;- ggplot(df_long, aes(x = Gene, y = value, fill = `Variant Group`)) +
 
 print(p)</code></pre>
 <p><img src="figure/mirage_lofmis.Rmd/unnamed-chunk-6-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_lofmis.Rmd/unnamed-chunk-6-1.png" target="_blank">35b59e7</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="validation" class="section level1">
+<h1>Validation</h1>
+<div id="enrichment-results" class="section level2">
+<h2>Enrichment results</h2>
+<pre class="r"><code>num_topgenes &lt;- sum(gene_pip$PP &gt; 0.5)
+
+load(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/enrichment_lofmisupdated.rdata&quot;)
+
+df_sum &lt;- df_sum[-which(rownames(df_sum) == &quot;constraint gene&quot;),]
+df_sum &lt;- df_sum[-which(rownames(df_sum) == &quot;AutismKB&quot;),]
+
+rownames(df_sum)[which(rownames(df_sum) == &quot;DD&quot;)] &lt;- &quot;DD&quot;
+rownames(df_sum)[which(rownames(df_sum) == &quot;SCZ gene&quot;)] &lt;- &quot;SCZ&quot;
+rownames(df_sum)[which(rownames(df_sum) == &quot;FMRP&quot;)] &lt;- &quot;FMRP target&quot;
+rownames(df_sum)[which(rownames(df_sum) == &quot;High&quot;)] &lt;- &quot;TADA&quot;
+#rownames(df_sum)[which(rownames(df_sum) == &quot;High&quot;)] &lt;- &quot;TADA High&quot;
+#rownames(df_sum)[which(rownames(df_sum) == &quot;Mod&quot;)] &lt;- &quot;TADA Med&quot;
+rownames(df_sum)[which(rownames(df_sum) == &quot;SFARI_gene&quot;)] &lt;- &quot;SFARI&quot;
+rownames(df_sum)[which(rownames(df_sum) == &quot;Haploinsuff&quot;)] &lt;- &quot;HI&quot;
+
+#order &lt;- c(&quot;SFARI&quot;,&quot;TADA High&quot;,&quot;TADA Med&quot;,&quot;ID&quot;,&quot;SCZ&quot;,&quot;FMRP target&quot;,&quot;PSD&quot;,&quot;RVIS&quot;,&quot;HI&quot;)
+order &lt;- c(&quot;SFARI&quot;,&quot;TADA&quot;,&quot;DD&quot;,&quot;SCZ&quot;,&quot;FMRP target&quot;,&quot;PSD&quot;,&quot;RVIS&quot;,&quot;HI&quot;)
+
+
+df_plot &lt;- df_sum[,c(&quot;overlap_rate_mirage&quot;,&quot;overlap_rate_burden_combined&quot;,&quot;overlap_rate_burden_lof&quot;,&quot;overlap_rate_acat&quot;,&quot;overlap_rate_all&quot;)]
+#colnames(df_plot) &lt;- c(&quot;Top 20 genes by MIRAGE&quot;,&quot;Top 20 genes by burden test (MPC&gt;2&amp;LoF)&quot;,&quot;Top 20 genes by burden test (LoF)&quot;,&quot;Top 20 genes by ACAT&quot;,&quot;All genes&quot;)
+colnames(df_plot) &lt;- c(
+  sprintf(&quot;Top %d genes by MIRAGE&quot;, num_topgenes),
+  sprintf(&quot;Top %d genes by burden test (MPC&gt;2&amp;LoF)&quot;, num_topgenes),
+  sprintf(&quot;Top %d genes by burden test (LoF)&quot;, num_topgenes),
+  sprintf(&quot;Top %d genes by ACAT&quot;, num_topgenes),
+  &quot;All genes&quot;
+)
+df_plot$category &lt;- rownames(df_plot)
+
+df_fisher &lt;- df_sum[,c(1,15:19)]
+
+df_plot &lt;- df_plot %&gt;%
+  mutate(category = as.factor(category)) %&gt;%
+  mutate(across(-category, as.numeric))
+
+# Transform the data from wide to long format
+long_df &lt;- pivot_longer(df_plot, cols = -category, names_to = &quot;Groups&quot;, values_to = &quot;value&quot;)
+long_df$Groups &lt;- factor(long_df$Groups, levels = colnames(df_plot))
+
+p &lt;- ggplot(long_df, aes(x = factor(category, levels = order), y = value, fill = Groups)) +
+  geom_bar(stat = &quot;identity&quot;, position = position_dodge(width = 0.7), width = 0.7) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = &quot;Gene sets&quot;, y = &quot;Overlap with Gene sets&quot;, fill = &quot;Groups&quot;)
+
+print(p)</code></pre>
+<p><img src="figure/mirage_lofmis.Rmd/unnamed-chunk-7-1.png" width="864" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -829,7 +1057,8 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] data.table_1.14.2 ggrepel_0.9.1     dplyr_1.1.4       ggplot2_3.5.1    
+[1] tidyr_1.3.0       data.table_1.14.2 ggrepel_0.9.1     dplyr_1.1.4      
+[5] ggplot2_3.5.1    
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.12       highr_0.9         pillar_1.9.0      compiler_4.2.0   
@@ -842,7 +1071,7 @@ loaded via a namespace (and not attached):
 [29] generics_0.1.2    fs_1.5.2          vctrs_0.6.5       sass_0.4.1       
 [33] DT_0.22           tidyselect_1.2.0  rprojroot_2.0.3   grid_4.2.0       
 [37] glue_1.6.2        R6_2.5.1          fansi_1.0.3       rmarkdown_2.25   
-[41] purrr_1.0.2       tidyr_1.3.0       farver_2.1.0      magrittr_2.0.3   
+[41] farver_2.1.0      purrr_1.0.2       magrittr_2.0.3    whisker_0.4      
 [45] scales_1.3.0      promises_1.2.0.1  htmltools_0.5.2   colorspace_2.0-3 
 [49] httpuv_1.6.5      labeling_0.4.2    utf8_1.2.2        stringi_1.7.6    
 [53] munsell_0.5.0    </code></pre>

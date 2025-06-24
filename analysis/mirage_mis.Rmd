@@ -13,6 +13,7 @@ library(ggplot2)
 library(dplyr)
 library(ggrepel)
 library(data.table)
+library(tidyr)
 
 mirage_res <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_misupdated.RDS")
 
@@ -219,6 +220,61 @@ p <- ggplot(df_long, aes(x = Gene, y = value, fill = `Variant Group`)) +
   ) +
   #scale_fill_manual(values = c("#B22222", "#FF8C00", "#FFD700","#4682B4","#5F9EA0","#87CEFA"))
   scale_fill_manual(values = palette()[2:7])
+
+print(p)
+```
+
+# Validation 
+
+## Enrichment results
+
+```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
+
+num_topgenes <- sum(gene_pip$PP > 0.5)
+
+load("/project/xinhe/xsun/rare_variants/5.revision/results/enrichment_misupdated.rdata")
+
+df_sum <- df_sum[-which(rownames(df_sum) == "constraint gene"),]
+df_sum <- df_sum[-which(rownames(df_sum) == "AutismKB"),]
+
+rownames(df_sum)[which(rownames(df_sum) == "DD")] <- "DD"
+rownames(df_sum)[which(rownames(df_sum) == "SCZ gene")] <- "SCZ"
+rownames(df_sum)[which(rownames(df_sum) == "FMRP")] <- "FMRP target"
+rownames(df_sum)[which(rownames(df_sum) == "High")] <- "TADA"
+#rownames(df_sum)[which(rownames(df_sum) == "High")] <- "TADA High"
+#rownames(df_sum)[which(rownames(df_sum) == "Mod")] <- "TADA Med"
+rownames(df_sum)[which(rownames(df_sum) == "SFARI_gene")] <- "SFARI"
+rownames(df_sum)[which(rownames(df_sum) == "Haploinsuff")] <- "HI"
+
+#order <- c("SFARI","TADA High","TADA Med","ID","SCZ","FMRP target","PSD","RVIS","HI")
+order <- c("SFARI","TADA","DD","SCZ","FMRP target","PSD","RVIS","HI")
+
+
+df_plot <- df_sum[,c("overlap_rate_mirage","overlap_rate_burden_combined","overlap_rate_burden_lof","overlap_rate_acat","overlap_rate_all")]
+colnames(df_plot) <- c(
+  sprintf("Top %d genes by MIRAGE", num_topgenes),
+  sprintf("Top %d genes by burden test (MPC>2&LoF)", num_topgenes),
+  sprintf("Top %d genes by burden test (LoF)", num_topgenes),
+  sprintf("Top %d genes by ACAT", num_topgenes),
+  "All genes"
+)
+df_plot$category <- rownames(df_plot)
+
+df_fisher <- df_sum[,c(1,15:19)]
+
+df_plot <- df_plot %>%
+  mutate(category = as.factor(category)) %>%
+  mutate(across(-category, as.numeric))
+
+# Transform the data from wide to long format
+long_df <- pivot_longer(df_plot, cols = -category, names_to = "Groups", values_to = "value")
+long_df$Groups <- factor(long_df$Groups, levels = colnames(df_plot))
+
+p <- ggplot(long_df, aes(x = factor(category, levels = order), y = value, fill = Groups)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.7) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Gene sets", y = "Overlap with Gene sets", fill = "Groups")
 
 print(p)
 ```
