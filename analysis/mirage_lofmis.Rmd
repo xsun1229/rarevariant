@@ -256,7 +256,7 @@ df_plot <- df_sum[,c("overlap_rate_mirage","overlap_rate_burden_combined","overl
 #colnames(df_plot) <- c("Top 20 genes by MIRAGE","Top 20 genes by burden test (MPC>2&LoF)","Top 20 genes by burden test (LoF)","Top 20 genes by ACAT","All genes")
 colnames(df_plot) <- c(
   sprintf("Top %d genes by MIRAGE", num_topgenes),
-  sprintf("Top %d genes by burden test (MPC>2&LoF)", num_topgenes),
+  sprintf("Top %d genes by burden test (likely pathogenic &LoF)", num_topgenes),
   sprintf("Top %d genes by burden test (LoF)", num_topgenes),
   sprintf("Top %d genes by ACAT", num_topgenes),
   "All genes"
@@ -297,10 +297,10 @@ ACAT <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/acat_lofmi
 
 
 pvalues <- list('Burden test (LoF)' = burden_pvalues$LoF_pvalue,
-                'Burden test (likely pathogenic &LoF)' = burden_pvalues$fisher_combine_pvalue, 
+                'Burden test (likely pathogenic & LoF)' = burden_pvalues$fisher_combine_pvalue, 
                 'ACAT' = ACAT$ACAT_pvalue)
 
-p <- qqplot_multi(pvalues_list = pvalues,legend_names = c('Burden test (LoF)','Burden test (likely pathogenic &LoF)','ACAT'))
+p <- qqplot_multi(pvalues_list = pvalues,legend_names = c('Burden test (LoF)','Burden test (likely pathogenic & LoF)','ACAT'))
 
 print(p)
 ```

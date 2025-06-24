@@ -545,15 +545,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree8e4affb916c9d709e9971ed46c2b16c23efeb57ftargetblank8e4affba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttreea1a64d9fe012db7e56464f4a6cd3259285f299b1targetblanka1a64d9a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/xsun1229/rarevariant/tree/8e4affb916c9d709e9971ed46c2b16c23efeb57f" target="_blank">8e4affb</a>
+<a href="https://github.com/xsun1229/rarevariant/tree/a1a64d9fe012db7e56464f4a6cd3259285f299b1" target="_blank">a1a64d9</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree8e4affb916c9d709e9971ed46c2b16c23efeb57ftargetblank8e4affba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttreea1a64d9fe012db7e56464f4a6cd3259285f299b1targetblanka1a64d9a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -563,7 +563,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/xsun1229/rarevariant/tree/8e4affb916c9d709e9971ed46c2b16c23efeb57f" target="_blank">8e4affb</a>.
+<a href="https://github.com/xsun1229/rarevariant/tree/a1a64d9fe012db7e56464f4a6cd3259285f299b1" target="_blank">a1a64d9</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -579,7 +579,6 @@ were generated:
 <pre><code>
 Unstaged changes:
     Modified:   analysis/mirage_lofmis.Rmd
-    Modified:   analysis/mirage_mis.Rmd
 
 </code></pre>
 <p>
@@ -625,6 +624,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/a1a64d9fe012db7e56464f4a6cd3259285f299b1/analysis/mirage_lofmis.Rmd" target="_blank">a1a64d9</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+<td>
+update
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/xsun1229/rarevariant/a1a64d9fe012db7e56464f4a6cd3259285f299b1/docs/mirage_lofmis.html" target="_blank">a1a64d9</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+<td>
+update
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1060,7 +1093,7 @@ df_plot &lt;- df_sum[,c(&quot;overlap_rate_mirage&quot;,&quot;overlap_rate_burde
 #colnames(df_plot) &lt;- c(&quot;Top 20 genes by MIRAGE&quot;,&quot;Top 20 genes by burden test (MPC&gt;2&amp;LoF)&quot;,&quot;Top 20 genes by burden test (LoF)&quot;,&quot;Top 20 genes by ACAT&quot;,&quot;All genes&quot;)
 colnames(df_plot) &lt;- c(
   sprintf(&quot;Top %d genes by MIRAGE&quot;, num_topgenes),
-  sprintf(&quot;Top %d genes by burden test (MPC&gt;2&amp;LoF)&quot;, num_topgenes),
+  sprintf(&quot;Top %d genes by burden test (likely pathogenic &amp;LoF)&quot;, num_topgenes),
   sprintf(&quot;Top %d genes by burden test (LoF)&quot;, num_topgenes),
   sprintf(&quot;Top %d genes by ACAT&quot;, num_topgenes),
   &quot;All genes&quot;
@@ -1109,6 +1142,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/xsun1229/rarevariant/blob/a1a64d9fe012db7e56464f4a6cd3259285f299b1/docs/figure/mirage_lofmis.Rmd/unnamed-chunk-7-1.png" target="_blank">a1a64d9</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/xsun1229/rarevariant/blob/8e4affb916c9d709e9971ed46c2b16c23efeb57f/docs/figure/mirage_lofmis.Rmd/unnamed-chunk-7-1.png" target="_blank">8e4affb</a>
 </td>
 <td>
@@ -1146,13 +1190,50 @@ ACAT &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/ac
 
 
 pvalues &lt;- list(&#39;Burden test (LoF)&#39; = burden_pvalues$LoF_pvalue,
-                &#39;Burden test (likely pathogenic &amp;LoF)&#39; = burden_pvalues$fisher_combine_pvalue, 
+                &#39;Burden test (likely pathogenic &amp; LoF)&#39; = burden_pvalues$fisher_combine_pvalue, 
                 &#39;ACAT&#39; = ACAT$ACAT_pvalue)
 
-p &lt;- qqplot_multi(pvalues_list = pvalues,legend_names = c(&#39;Burden test (LoF)&#39;,&#39;Burden test (likely pathogenic &amp;LoF)&#39;,&#39;ACAT&#39;))
+p &lt;- qqplot_multi(pvalues_list = pvalues,legend_names = c(&#39;Burden test (LoF)&#39;,&#39;Burden test (likely pathogenic &amp; LoF)&#39;,&#39;ACAT&#39;))
 
 print(p)</code></pre>
 <p><img src="figure/mirage_lofmis.Rmd/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/a1a64d9fe012db7e56464f4a6cd3259285f299b1/docs/figure/mirage_lofmis.Rmd/unnamed-chunk-8-1.png" target="_blank">a1a64d9</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

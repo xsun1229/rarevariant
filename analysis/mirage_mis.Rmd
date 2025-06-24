@@ -253,7 +253,7 @@ order <- c("SFARI","TADA","ID","SCZ","FMRP target","PSD","RVIS","HI")
 df_plot <- df_sum[,c("overlap_rate_mirage","overlap_rate_burden_combined","overlap_rate_burden_lof","overlap_rate_acat","overlap_rate_all")]
 colnames(df_plot) <- c(
   sprintf("Top %d genes by MIRAGE", num_topgenes),
-  sprintf("Top %d genes by burden test (MPC>2&LoF)", num_topgenes),
+  sprintf("Top %d genes by burden test (likely pathogenic&LoF)", num_topgenes),
   sprintf("Top %d genes by burden test (LoF)", num_topgenes),
   sprintf("Top %d genes by ACAT", num_topgenes),
   "All genes"
