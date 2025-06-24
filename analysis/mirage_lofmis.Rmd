@@ -226,7 +226,6 @@ print(p)
 
 
 
-
 # Validation 
 
 ## Enrichment results
@@ -240,7 +239,7 @@ load("/project/xinhe/xsun/rare_variants/5.revision/results/enrichment_lofmisupda
 df_sum <- df_sum[-which(rownames(df_sum) == "constraint gene"),]
 df_sum <- df_sum[-which(rownames(df_sum) == "AutismKB"),]
 
-rownames(df_sum)[which(rownames(df_sum) == "DD")] <- "DD"
+rownames(df_sum)[which(rownames(df_sum) == "ID gene")] <- "ID"
 rownames(df_sum)[which(rownames(df_sum) == "SCZ gene")] <- "SCZ"
 rownames(df_sum)[which(rownames(df_sum) == "FMRP")] <- "FMRP target"
 rownames(df_sum)[which(rownames(df_sum) == "High")] <- "TADA"
@@ -250,7 +249,7 @@ rownames(df_sum)[which(rownames(df_sum) == "SFARI_gene")] <- "SFARI"
 rownames(df_sum)[which(rownames(df_sum) == "Haploinsuff")] <- "HI"
 
 #order <- c("SFARI","TADA High","TADA Med","ID","SCZ","FMRP target","PSD","RVIS","HI")
-order <- c("SFARI","TADA","DD","SCZ","FMRP target","PSD","RVIS","HI")
+order <- c("SFARI","TADA","ID","SCZ","FMRP target","PSD","RVIS","HI")
 
 
 df_plot <- df_sum[,c("overlap_rate_mirage","overlap_rate_burden_combined","overlap_rate_burden_lof","overlap_rate_acat","overlap_rate_all")]
@@ -283,3 +282,25 @@ p <- ggplot(long_df, aes(x = factor(category, levels = order), y = value, fill =
 print(p)
 ```
 
+
+
+# Other methods
+
+```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}
+
+source("/project/xinhe/xsun/r_functions/qqplot_multi.R")
+
+burden_pvalues <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/burden_pvalues_lofmisupdated.RDS")
+burden_pvalues <- as.data.frame(burden_pvalues)
+
+ACAT <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/acat_lofmisupdated.RDS")
+
+
+pvalues <- list('Burden test (LoF)' = burden_pvalues$LoF_pvalue,
+                'Burden test (likely pathogenic &LoF)' = burden_pvalues$fisher_combine_pvalue, 
+                'ACAT' = ACAT$ACAT_pvalue)
+
+p <- qqplot_multi(pvalues_list = pvalues,legend_names = c('Burden test (LoF)','Burden test (likely pathogenic &LoF)','ACAT'))
+
+print(p)
+```
