@@ -17,7 +17,7 @@ library(tidyr)
 
 mirage_res <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_lofmisupdated.RDS")
 
-cat <- c("high LOEUF oe", "med LOEUF oe", "low LOEUF oe", "likely pathogenic", "ambiguous", "likely benign")
+cat <- c("low LOEUF oe", "med LOEUF oe", "high LOEUF oe", "likely pathogenic", "ambiguous", "likely benign")
 # cat <- c("highPLI", "medPLI", "lowPLI", "likely pathogenic", "ambiguous", "likely benign")
 
 ```
@@ -198,7 +198,7 @@ dat_select$sum_bf <- rowSums(dat_select[,3:8])
 dat_select$Gene <- factor(dat_select$Gene, levels = dat_select$Gene)
 
 df_long <- dat_select %>%
-  dplyr::select(Gene, `high LOEUF oe`, `med LOEUF oe`, `low LOEUF oe`,  `likely pathogenic`, ambiguous, `likely benign`) %>%
+  dplyr::select(Gene, `low LOEUF oe`, `med LOEUF oe`, `high LOEUF oe`,  `likely pathogenic`, ambiguous, `likely benign`) %>%
   tidyr::pivot_longer(cols = -Gene, names_to = "variant_type", values_to = "value")
 
 
