@@ -16,4 +16,4 @@ Revision for rare variant project
 
 [MIRAGE results -- lof & missense annotation updated](mirage_lofmis.html)
 
-
+[MIRAGE results -- lof & missense annotation updated -- lof use decile](mirage_lofdecmis.html)
