@@ -14,12 +14,13 @@ library(dplyr)
 library(ggrepel)
 library(data.table)
 library(tidyr)
+library(gridExtra)
 
 mirage_res <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_misupdated.RDS")
 
 #cat <- c("high LOEUF oe", "med LOEUF oe", "low LOEUF oe", "likely pathogenic", "ambiguous", "likely benign")
 cat <- c("highPLI", "medPLI", "lowPLI", "likely pathogenic", "ambiguous", "likely benign")
-
+cat_old <- c("highPLI", "medPLI", "lowPLI", "highMPC", "medMPC", "lowMPC")
 ```
 
 # Overview of input
@@ -35,7 +36,7 @@ names(old_mirage) <- c("highPLI", "medPLI", "lowPLI", "highMPC", "medMPC", "lowM
 print(old_mirage)
 
 print("Missense updated mirage input:")
-mirage_input_mis_updated <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_mis_updated.RDS")
+mirage_input_mis_updated <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_misupdated.RDS")
 new_mirage <- table(mirage_input_mis_updated$group.index)[c("1","2","3","4","5","6")]
 names(new_mirage) <- cat
 sprintf("Number of rare-variants = %s",nrow(mirage_input_mis_updated))
@@ -300,3 +301,73 @@ p <- qqplot_multi(pvalues_list = pvalues,legend_names = c('Burden test (LoF)','B
 print(p)
 ```
 
+
+
+# Comparing with results in initial submission
+
+```{r fig.height=3, fig.width=8 , warning=F, message=FALSE}
+
+mirage_res_old <- read.csv("/project2/xinhe/xsun/rare_variants/4.additional_analysis/data/data_manhattan_plot_AllInheritedVariant_deltafixed_20231102.csv")
+
+compare <- merge(gene_pip, mirage_res_old, by = "Gene")
+colnames(compare) <- c("Gene","BF_new", "post_prob_new","chr","pos" ,"PP_new","FDR_new","X","BF_old","post_prob_old","chr.y","pos.y")
+
+compare <- compare[,c("Gene","chr","pos","BF_new", "post_prob_new","FDR_new","BF_old","post_prob_old")] 
+compare$pp_diff <- abs(compare$post_prob_new - compare$post_prob_old)
+
+# Set a threshold for labeling (adjustable)
+label_threshold <- 0.3
+compare$label <- ifelse(compare$pp_diff > label_threshold, compare$Gene, NA)
+
+
+p1 <- ggplot(compare, aes(x = BF_old, y = BF_new)) +
+  geom_point(alpha = 0.7, color = "darkorange") +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray40") +
+  geom_text_repel(aes(label = label), size = 2.5, max.overlaps = 100) +
+  labs(
+    title = "PP diff > 0.3 are labeled",
+    x = "BF_old",
+    y = "BF_new"
+  ) +
+  theme_minimal()
+
+# Plot 2: post_prob_new vs post_prob_old
+p2 <- ggplot(compare, aes(x = post_prob_old, y = post_prob_new)) +
+    geom_point(alpha = 0.7, color = "darkorange") +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray40") +
+    geom_text_repel(aes(label = label), size = 2.5, max.overlaps = 100) +
+    labs(
+        title = "PP diff > 0.3 are labeled",
+        x = "PP_old",
+        y = "PP_new"
+    ) +
+    theme_minimal()
+
+grid.arrange(p1, p2,  ncol = 2)
+
+genes_diff <- compare[!is.na(compare$label),]
+
+cat_compare <- c("highPLI", "medPLI", "lowPLI", "highMPC/likely pathogenic", "medMPC/ambiguous", "lowMPC/likely benign")
+mirage_input_old <- data.table::fread("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt")
+
+for (i in 1:nrow(genes_diff)){
+  
+  gene <- genes_diff$Gene[i]
+  mirage_input_new_gene <- mirage_input_mis_updated[mirage_input_mis_updated$Gene == gene,]
+  table_new <- table(mirage_input_new_gene$group.index)[c("1","2","3","4","5","6")]
+  names(table_new) <- cat_compare
+ 
+  print(paste0("Input for gene ",gene))
+
+  mirage_input_old_gene <- mirage_input_old[mirage_input_old$Gene == gene,]
+  table_old <- table(mirage_input_old_gene$group.index)[c("1","2","3","4","5","6")]
+  names(table_old) <- cat_compare
+
+  table_2 <- rbind(table_new,table_old)
+  rownames(table_2) <- c("input_new","input_old")
+  print(table_2)
+  
+}
+
+
+```

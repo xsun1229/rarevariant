@@ -411,7 +411,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2025-06-29
+<strong>Last updated:</strong> 2025-07-01
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -449,10 +449,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -545,15 +545,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree99bc5ef83360ca1e3807ed55e1d834b4f9865139targetblank99bc5efa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree07d01d1449a41965422bdb5f706a6d025cc3aacbtargetblank07d01d1a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/xsun1229/rarevariant/tree/99bc5ef83360ca1e3807ed55e1d834b4f9865139" target="_blank">99bc5ef</a>
+<a href="https://github.com/xsun1229/rarevariant/tree/07d01d1449a41965422bdb5f706a6d025cc3aacb" target="_blank">07d01d1</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree99bc5ef83360ca1e3807ed55e1d834b4f9865139targetblank99bc5efa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree07d01d1449a41965422bdb5f706a6d025cc3aacbtargetblank07d01d1a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -563,7 +563,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/xsun1229/rarevariant/tree/99bc5ef83360ca1e3807ed55e1d834b4f9865139" target="_blank">99bc5ef</a>.
+<a href="https://github.com/xsun1229/rarevariant/tree/07d01d1449a41965422bdb5f706a6d025cc3aacb" target="_blank">07d01d1</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,14 +577,10 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Ignored files:
-    Ignored:    analysis/figure/
-
-Untracked files:
-    Untracked:  analysis/mirage_lofdecmis.Rmd
-
 Unstaged changes:
     Modified:   analysis/index.Rmd
+    Modified:   analysis/mirage_lofdecmis.Rmd
+    Modified:   analysis/mirage_mis.Rmd
 
 </code></pre>
 <p>
@@ -599,10 +595,74 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/mirage_lofdecmis.Rmd</code>) and
+HTML (<code>docs/mirage_lofdecmis.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/07d01d1449a41965422bdb5f706a6d025cc3aacb/analysis/mirage_lofdecmis.Rmd" target="_blank">07d01d1</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-29
+</td>
+<td>
+update
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/xsun1229/rarevariant/07d01d1449a41965422bdb5f706a6d025cc3aacb/docs/mirage_lofdecmis.html" target="_blank">07d01d1</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-29
+</td>
+<td>
+update
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -612,11 +672,13 @@ library(dplyr)
 library(ggrepel)
 library(data.table)
 library(tidyr)
+library(gridExtra)
 
 mirage_res &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_lofdecmis.RDS&quot;)
 
 cat &lt;- c(&quot;low LOEUF oe&quot;, &quot;med LOEUF oe&quot;, &quot;high LOEUF oe&quot;, &quot;likely pathogenic&quot;, &quot;ambiguous&quot;, &quot;likely benign&quot;)
-# cat &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;likely pathogenic&quot;, &quot;ambiguous&quot;, &quot;likely benign&quot;)</code></pre>
+# cat &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;likely pathogenic&quot;, &quot;ambiguous&quot;, &quot;likely benign&quot;)
+cat_old &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;highMPC&quot;, &quot;medMPC&quot;, &quot;lowMPC&quot;)</code></pre>
 <div id="overview-of-input" class="section level1">
 <h1>Overview of input</h1>
 <pre class="r"><code>input &lt;- fread(&quot;/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt&quot;)
@@ -678,6 +740,43 @@ p &lt;- ggplot(df, aes(x = cat, y = est, fill = legend)) +
 
 print(p)</code></pre>
 <p><img src="figure/mirage_lofdecmis.Rmd/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/07d01d1449a41965422bdb5f706a6d025cc3aacb/docs/figure/mirage_lofdecmis.Rmd/unnamed-chunk-3-1.png" target="_blank">07d01d1</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="gene-level-results" class="section level1">
 <h1>Gene-level results</h1>
@@ -750,6 +849,43 @@ manhplot &lt;- ggplot(don, aes(x=poscum, y=post_prob)) +
 
 print(manhplot)</code></pre>
 <p><img src="figure/mirage_lofdecmis.Rmd/unnamed-chunk-5-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/07d01d1449a41965422bdb5f706a6d025cc3aacb/docs/figure/mirage_lofdecmis.Rmd/unnamed-chunk-5-1.png" target="_blank">07d01d1</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="bf-partition" class="section level2">
 <h2>BF partition</h2>
@@ -809,6 +945,43 @@ p &lt;- ggplot(df_long, aes(x = Gene, y = value, fill = `Variant Group`)) +
 
 print(p)</code></pre>
 <p><img src="figure/mirage_lofdecmis.Rmd/unnamed-chunk-6-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/07d01d1449a41965422bdb5f706a6d025cc3aacb/docs/figure/mirage_lofdecmis.Rmd/unnamed-chunk-6-1.png" target="_blank">07d01d1</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="validation" class="section level1">
@@ -864,6 +1037,43 @@ p &lt;- ggplot(long_df, aes(x = factor(category, levels = order), y = value, fil
 
 print(p)</code></pre>
 <p><img src="figure/mirage_lofdecmis.Rmd/unnamed-chunk-7-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/07d01d1449a41965422bdb5f706a6d025cc3aacb/docs/figure/mirage_lofdecmis.Rmd/unnamed-chunk-7-1.png" target="_blank">07d01d1</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="other-methods" class="section level1">
@@ -884,6 +1094,319 @@ p &lt;- qqplot_multi(pvalues_list = pvalues,legend_names = c(&#39;Burden test (L
 
 print(p)</code></pre>
 <p><img src="figure/mirage_lofdecmis.Rmd/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/07d01d1449a41965422bdb5f706a6d025cc3aacb/docs/figure/mirage_lofdecmis.Rmd/unnamed-chunk-8-1.png" target="_blank">07d01d1</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-29
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="comparing-with-results-in-initial-submission"
+class="section level1">
+<h1>Comparing with results in initial submission</h1>
+<pre class="r"><code>mirage_res_old &lt;- read.csv(&quot;/project2/xinhe/xsun/rare_variants/4.additional_analysis/data/data_manhattan_plot_AllInheritedVariant_deltafixed_20231102.csv&quot;)
+
+compare &lt;- merge(gene_pip, mirage_res_old, by = &quot;Gene&quot;)
+colnames(compare) &lt;- c(&quot;Gene&quot;,&quot;BF_new&quot;, &quot;post_prob_new&quot;,&quot;chr&quot;,&quot;pos&quot; ,&quot;PP_new&quot;,&quot;FDR_new&quot;,&quot;X&quot;,&quot;BF_old&quot;,&quot;post_prob_old&quot;,&quot;chr.y&quot;,&quot;pos.y&quot;)
+
+compare &lt;- compare[,c(&quot;Gene&quot;,&quot;chr&quot;,&quot;pos&quot;,&quot;BF_new&quot;, &quot;post_prob_new&quot;,&quot;FDR_new&quot;,&quot;BF_old&quot;,&quot;post_prob_old&quot;)] 
+compare$pp_diff &lt;- abs(compare$post_prob_new - compare$post_prob_old)
+
+# Set a threshold for labeling (adjustable)
+label_threshold &lt;- 0.3
+compare$label &lt;- ifelse(compare$pp_diff &gt; label_threshold, compare$Gene, NA)
+
+
+p1 &lt;- ggplot(compare, aes(x = BF_old, y = BF_new)) +
+  geom_point(alpha = 0.7, color = &quot;darkorange&quot;) +
+  geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;gray40&quot;) +
+  geom_text_repel(aes(label = label), size = 2.5, max.overlaps = 100) +
+  labs(
+    title = &quot;PP diff &gt; 0.3 are labeled&quot;,
+    x = &quot;BF_old&quot;,
+    y = &quot;BF_new&quot;
+  ) +
+  theme_minimal()
+
+# Plot 2: post_prob_new vs post_prob_old
+p2 &lt;- ggplot(compare, aes(x = post_prob_old, y = post_prob_new)) +
+    geom_point(alpha = 0.7, color = &quot;darkorange&quot;) +
+    geom_abline(slope = 1, intercept = 0, linetype = &quot;dashed&quot;, color = &quot;gray40&quot;) +
+    geom_text_repel(aes(label = label), size = 2.5, max.overlaps = 100) +
+    labs(
+        title = &quot;PP diff &gt; 0.3 are labeled&quot;,
+        x = &quot;PP_old&quot;,
+        y = &quot;PP_new&quot;
+    ) +
+    theme_minimal()
+
+grid.arrange(p1, p2,  ncol = 2)</code></pre>
+<p><img src="figure/mirage_lofdecmis.Rmd/unnamed-chunk-9-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>genes_diff &lt;- compare[!is.na(compare$label),]
+
+
+cat_compare &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;highMPC/likely pathogenic&quot;, &quot;medMPC/ambiguous&quot;, &quot;lowMPC/likely benign&quot;)
+mirage_input_old &lt;- data.table::fread(&quot;/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt&quot;)
+
+for (i in 1:nrow(genes_diff)){
+  
+  gene &lt;- genes_diff$Gene[i]
+  mirage_input_new_gene &lt;- mirage_input_mis_updated[mirage_input_mis_updated$Gene == gene,]
+  table_new &lt;- table(mirage_input_new_gene$group.index)[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+  names(table_new) &lt;- cat_compare
+ 
+  print(paste0(&quot;Input for gene &quot;,gene))
+
+  mirage_input_old_gene &lt;- mirage_input_old[mirage_input_old$Gene == gene,]
+  table_old &lt;- table(mirage_input_old_gene$group.index)[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+  names(table_old) &lt;- cat_compare
+
+  table_2 &lt;- rbind(table_new,table_old)
+  rownames(table_2) &lt;- c(&quot;input_new&quot;,&quot;input_old&quot;)
+  print(table_2)
+  
+}</code></pre>
+<pre><code>[1] &quot;Input for gene ADAM33&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     NA     10                        20               11
+input_old      NA     NA     10                         6               25
+          lowMPC/likely benign
+input_new                  123
+input_old                  123
+[1] &quot;Input for gene AHNAK&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA      8     NA                        63               85
+input_old      NA      8     NA                        NA               NA
+          lowMPC/likely benign
+input_new                  590
+input_old                  738
+[1] &quot;Input for gene ATG4C&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     NA     19                        27                7
+input_old      NA     NA     19                        NA               NA
+          lowMPC/likely benign
+input_new                   46
+input_old                   80
+[1] &quot;Input for gene ATG9B&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     NA     22                        23               20
+input_old      NA     NA     22                        22               17
+          lowMPC/likely benign
+input_new                  166
+input_old                  170
+[1] &quot;Input for gene BTG3&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new       2     NA     NA                         4                4
+input_old      NA      2     NA                         6               11
+          lowMPC/likely benign
+input_new                   20
+input_old                   16
+[1] &quot;Input for gene CABIN1&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     21     NA                        70               31
+input_old      NA     NA     21                        12               78
+          lowMPC/likely benign
+input_new                  277
+input_old                  288
+[1] &quot;Input for gene CHML&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     11     NA                        14                8
+input_old      NA     NA     11                        NA               NA
+          lowMPC/likely benign
+input_new                   98
+input_old                  120
+[1] &quot;Input for gene COL17A1&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     NA     22                        47               30
+input_old      NA     NA     22                        NA               NA
+          lowMPC/likely benign
+input_new                  260
+input_old                  337
+[1] &quot;Input for gene CTBP2&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      15     NA     NA                        16                6
+input_old      NA     NA     15                         9               18
+          lowMPC/likely benign
+input_new                   11
+input_old                  185
+[1] &quot;Input for gene DDX55&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     NA     18                        35               10
+input_old      NA     NA     18                        NA               NA
+          lowMPC/likely benign
+input_new                   74
+input_old                  119
+[1] &quot;Input for gene EML6&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     20     NA                       138               41
+input_old      NA     NA     20                        NA               NA
+          lowMPC/likely benign
+input_new                  193
+input_old                  372
+[1] &quot;Input for gene ERBB2&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new       6     NA     NA                        27               17
+input_old      NA     NA      6                        17               49
+          lowMPC/likely benign
+input_new                  144
+input_old                  122
+[1] &quot;Input for gene GAPVD1&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     NA     NA                        55               23
+input_old      NA     NA     NA                         8               16
+          lowMPC/likely benign
+input_new                  108
+input_old                  167
+[1] &quot;Input for gene KIAA1109&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     31     NA                       123               61
+input_old      NA     NA     31                         7              187
+          lowMPC/likely benign
+input_new                  323
+input_old                  313
+[1] &quot;Input for gene MAML1&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new       1     NA     NA                        24               13
+input_old       1     NA     NA                        13                5
+          lowMPC/likely benign
+input_new                  145
+input_old                  164
+[1] &quot;Input for gene NAV3&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      13     NA     NA                        68               34
+input_old      13     NA     NA                        NA               NA
+          lowMPC/likely benign
+input_new                  236
+input_old                  338
+[1] &quot;Input for gene OR11H6&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA      8     NA                        13               10
+input_old      NA     NA      8                        NA               NA
+          lowMPC/likely benign
+input_new                   35
+input_old                   58
+[1] &quot;Input for gene OSBPL3&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA      9     NA                        31               14
+input_old      NA     NA      9                        NA                2
+          lowMPC/likely benign
+input_new                  100
+input_old                  143
+[1] &quot;Input for gene OXER1&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     NA     NA                        17                9
+input_old      NA     NA     NA                        NA               NA
+          lowMPC/likely benign
+input_new                   94
+input_old                  120
+[1] &quot;Input for gene PEX6&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     14     NA                        21               13
+input_old      NA     NA     14                        17                4
+          lowMPC/likely benign
+input_new                  133
+input_old                  146
+[1] &quot;Input for gene PLXNA1&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new       8     NA     NA                        80               37
+input_old       8     NA     NA                        39              160
+          lowMPC/likely benign
+input_new                  246
+input_old                  164
+[1] &quot;Input for gene PPL&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     NA     24                        37               42
+input_old      NA     NA     24                        NA               NA
+          lowMPC/likely benign
+input_new                  475
+input_old                  554
+[1] &quot;Input for gene PRTG&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     13     NA                        40               29
+input_old      NA     NA     13                        NA               NA
+          lowMPC/likely benign
+input_new                  143
+input_old                  212
+[1] &quot;Input for gene PTPRE&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     11     NA                        21                9
+input_old      NA     NA     11                         9               26
+          lowMPC/likely benign
+input_new                   71
+input_old                   66
+[1] &quot;Input for gene SLC5A6&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA      4     NA                        10                6
+input_old      NA     NA      4                        NA               24
+          lowMPC/likely benign
+input_new                   88
+input_old                   80
+[1] &quot;Input for gene SMOC1&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new       3     NA     NA                        20               12
+input_old      NA     NA      3                        NA               20
+          lowMPC/likely benign
+input_new                   50
+input_old                   62
+[1] &quot;Input for gene SYNGAP1&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     NA     NA                        23               15
+input_old      NA     NA     NA                        43               50
+          lowMPC/likely benign
+input_new                   58
+input_old                    3
+[1] &quot;Input for gene TUBGCP6&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      NA     NA     24                        66               58
+input_old      NA     NA     24                        NA               NA
+          lowMPC/likely benign
+input_new                  308
+input_old                  432
+[1] &quot;Input for gene UBR1&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new      15     NA     NA                        53               22
+input_old      NA     NA     15                        NA               37
+          lowMPC/likely benign
+input_new                  149
+input_old                  187
+[1] &quot;Input for gene USP31&quot;
+          highPLI medPLI lowPLI highMPC/likely pathogenic medMPC/ambiguous
+input_new       4     NA     NA                        45               20
+input_old      NA     NA      4                         6               14
+          lowMPC/likely benign
+input_new                  171
+input_old                  216</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -907,8 +1430,8 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] tidyr_1.3.0       data.table_1.14.2 ggrepel_0.9.1     dplyr_1.1.4      
-[5] ggplot2_3.5.1    
+[1] gridExtra_2.3     tidyr_1.3.0       data.table_1.14.2 ggrepel_0.9.1    
+[5] dplyr_1.1.4       ggplot2_3.5.1    
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.12       highr_0.9         pillar_1.9.0      compiler_4.2.0   
@@ -921,9 +1444,10 @@ loaded via a namespace (and not attached):
 [29] generics_0.1.2    fs_1.5.2          vctrs_0.6.5       sass_0.4.1       
 [33] DT_0.22           tidyselect_1.2.0  rprojroot_2.0.3   grid_4.2.0       
 [37] glue_1.6.2        R6_2.5.1          fansi_1.0.3       rmarkdown_2.25   
-[41] farver_2.1.0      purrr_1.0.2       magrittr_2.0.3    scales_1.3.0     
-[45] promises_1.2.0.1  htmltools_0.5.2   colorspace_2.0-3  httpuv_1.6.5     
-[49] labeling_0.4.2    utf8_1.2.2        stringi_1.7.6     munsell_0.5.0    </code></pre>
+[41] farver_2.1.0      purrr_1.0.2       magrittr_2.0.3    whisker_0.4      
+[45] scales_1.3.0      promises_1.2.0.1  htmltools_0.5.2   colorspace_2.0-3 
+[49] httpuv_1.6.5      labeling_0.4.2    utf8_1.2.2        stringi_1.7.6    
+[53] munsell_0.5.0    </code></pre>
 </div>
 </div>
 
