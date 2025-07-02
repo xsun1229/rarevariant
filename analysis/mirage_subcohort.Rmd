@@ -1,0 +1,296 @@
+---
+title: "Comparing results from ASC, SPARK, and collectively, only missense updated"
+author: "XSun"
+date: "2025-07-01"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+---
+
+```{r, warning=F, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(ggrepel)
+library(data.table)
+library(tidyr)
+library(gridExtra)
+
+#cat <- c("high LOEUF oe", "med LOEUF oe", "low LOEUF oe", "likely pathogenic", "ambiguous", "likely benign")
+cat <- c("highPLI", "medPLI", "lowPLI", "likely pathogenic", "ambiguous", "likely benign")
+cat_old <- c("highPLI", "medPLI", "lowPLI", "highMPC", "medMPC", "lowMPC")
+
+lof_cats <- c("highPLI", "medPLI", "lowPLI")
+
+
+plot_PP_threshold_counts <- function(..., threshold = 0.5, sources = NULL) {
+  gene_lists <- list(...)
+  
+  if (is.null(sources)) {
+    sources <- paste0("Dataset_", seq_along(gene_lists))
+  }
+  
+  if (length(gene_lists) != length(sources)) {
+    stop("Length of gene_lists and sources must match.")
+  }
+  
+  # Count genes passing the threshold
+  counts <- data.frame(
+    source = sources,
+    pass_PP = sapply(gene_lists, function(df) sum(df$post_prob > threshold))
+  )
+  
+  # Plot
+  library(ggplot2)
+  ggplot(counts, aes(x = source, y = pass_PP, fill = source)) +
+    geom_bar(stat = "identity", width = 0.6) +
+    geom_text(aes(label = pass_PP), vjust = -0.5, size = 5) +
+    scale_fill_brewer(palette = "Set2") +
+    theme_minimal() +
+    labs(
+      x = "Dataset",
+      y = paste0("Number of genes with PP > ", threshold),
+      title = paste0("Genes with Posterior Probability > ", threshold)
+    ) +
+    theme(
+      legend.position = "none",
+      axis.text = element_text(size = 12),
+      axis.title = element_text(size = 14),
+      plot.title = element_text(size = 16, face = "bold", hjust = 0.5)
+    )
+}
+
+plot_gene_venn <- function(..., 
+                           sources = NULL, 
+                           threshold = 0.5, 
+                           save_file = FALSE, 
+                           filename = "gene_venn.png", 
+                           width = 6, height = 6, dpi = 300,
+                           return_gene_sets = TRUE) {
+  # Required packages
+  require(VennDiagram)
+  require(RColorBrewer)
+  require(grid)
+  
+  gene_dfs <- list(...)
+  
+  if (is.null(sources)) {
+    sources <- paste0("Dataset_", seq_along(gene_dfs))
+  }
+  
+  if (length(gene_dfs) != length(sources)) {
+    stop("The number of gene data frames and sources must match.")
+  }
+  
+  # Extract gene sets with post_prob > threshold
+  gene_sets <- lapply(gene_dfs, function(df) {
+    df$Gene[df$post_prob > threshold]
+  })
+  names(gene_sets) <- sources
+  
+  # Define fill colors
+  set2_colors <- brewer.pal(n = length(gene_sets), name = "Set2")
+  
+  # Create Venn diagram
+  venn_obj <- venn.diagram(
+    x = gene_sets,
+    filename = if (save_file) filename else NULL,
+    fill = set2_colors,
+    alpha = 0.6,
+    cex = 1.5,
+    cat.cex = 1.5,
+    cat.pos = 0,
+    cat.dist = 0.05,
+    margin = 0.1
+  )
+  
+  if (!save_file) {
+    grid.newpage()
+    grid.draw(venn_obj)
+  }
+  
+  # Return the gene sets or intersections
+  if (return_gene_sets) {
+    return(gene_sets)
+  }
+}
+
+
+
+```
+
+# Input
+
+```{r fig.height=3, fig.width=7 , warning=F, message=FALSE}
+
+print("Input for all")
+mirage_input_all <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_misupdated.RDS")
+new_mirage <- table(mirage_input_all$group.index)[c("1","2","3","4","5","6")]
+names(new_mirage) <- cat
+sprintf("Number of rare-variants = %s",nrow(mirage_input_all))
+print(new_mirage)
+
+print("Input for ASC")
+mirage_input_asc <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_ASC_misupdated.RDS")
+new_mirage <- table(mirage_input_asc$group.index)[c("1","2","3","4","5","6")]
+names(new_mirage) <- cat
+sprintf("Number of rare-variants = %s",nrow(mirage_input_asc))
+print(new_mirage)
+
+print("Input for SPARK")
+mirage_input_spark <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_SPARK_misupdated.RDS")
+new_mirage <- table(mirage_input_spark$group.index)[c("1","2","3","4","5","6")]
+names(new_mirage) <- cat
+sprintf("Number of rare-variants = %s",nrow(mirage_input_spark))
+print(new_mirage)
+
+```
+
+# Parameters
+
+```{r fig.height=3, fig.width=7 , warning=F, message=FALSE}
+mirage_res_asc <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_ASC_misupdated.RDS")
+
+est_asc <- mirage_res_asc$eta.est[c("1","2","3","4","5","6")]
+names(mirage_res_asc$eta.pvalue) <- names(mirage_res_asc$eta.est)
+pval_asc <- mirage_res_asc$eta.pvalue[c("1","2","3","4","5","6")]
+
+mirage_res_spark <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_SPARK_misupdated.RDS")
+
+est_spark <- mirage_res_spark$eta.est[c("1","2","3","4","5","6")]
+names(mirage_res_spark$eta.pvalue) <- names(mirage_res_spark$eta.est)
+pval_spark <- mirage_res_spark$eta.pvalue[c("1","2","3","4","5","6")]
+
+mirage_res_all <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_misupdated.RDS")
+
+est_all <- mirage_res_all$eta.est[c("1","2","3","4","5","6")]
+names(mirage_res_all$eta.pvalue) <- names(mirage_res_all$eta.est)
+pval_all <- mirage_res_all$eta.pvalue[c("1","2","3","4","5","6")]
+```
+
+
+```{r fig.height=3, fig.width=7 , warning=F, message=FALSE}
+n <- length(cat)
+
+df_long <- data.frame(
+  cat = rep(cat, times = 3),  # each cat appears 3 times (once per source)
+  est = c(est_asc, est_spark, est_all),
+  pval = c(pval_asc, pval_spark, pval_all),
+  source = rep(c("ASC", "SPARK", "All"), each = n)  # source groups repeat every n rows
+)
+
+# Define LoF vs Missense groups
+
+df_long$legend <- ifelse(df_long$cat %in% lof_cats, "LoF", "Missense")
+df_long$legend <- factor(df_long$legend, levels = c("LoF", "Missense"))
+
+# Set desired order of categories
+df_long$cat <- factor(df_long$cat, levels = cat)
+
+# Plot
+p <- ggplot(df_long, aes(x = cat, y = est, fill = legend)) +
+  # Main grouped bars
+  geom_bar(
+    aes(group = source),
+    stat = "identity",
+    position = position_dodge(width = 0.8),
+    width = 0.6
+  ) +
+
+  # Add p-value significance stars above the bars
+  geom_text(
+    aes(label = ifelse(pval < 0.05, "*", ""), group = source),
+    position = position_dodge(width = 0.8),
+    vjust = -0.6, size = 6
+  ) +
+
+  # Add source labels inside the bars
+  geom_text(
+    aes(label = source, group = source),
+    position = position_dodge(width = 0.8),
+    vjust = 1.5, size = 3, color = "black"
+  ) +
+
+  # Add explanation for asterisk
+  annotate("text", x = Inf, y = 0.9, label = "*: p-value < 0.05", hjust = 1.1, size = 5) +
+
+  # Theme and styling
+  theme_minimal() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    legend.title = element_blank()
+  ) +
+  scale_y_continuous(breaks = seq(0, 1, 0.2), expand = expansion(mult = c(0, 0.1))) +
+  scale_fill_manual(values = c("LoF" = "orange", "Missense" = "steelblue"))
+
+# Print plot
+print(p)
+
+```
+
+
+
+
+
+
+# Gene-level results
+
+
+
+```{r fig.height=5, fig.width=5, warning=F, message=FALSE}
+
+gene_pip_asc <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_ASC_misupdated.RDS")
+gene_pip_spark <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_SPARK_misupdated.RDS")
+gene_pip_all <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_misupdated.RDS")
+
+plot_PP_threshold_counts(
+  gene_pip_asc, gene_pip_spark, gene_pip_all,
+  sources = c("ASC", "SPARK", "All"),
+  threshold = 0.5
+)
+
+gene_sets <- plot_gene_venn(
+  gene_pip_asc, gene_pip_spark, gene_pip_all,
+  sources = c("ASC", "SPARK", "All"),
+  threshold = 0.5
+)
+
+print("Overlap for ASC and ALL")
+intersect(gene_sets$ASC, gene_sets$All)
+print("Overlap for SPARK and ALL")
+intersect(gene_sets$SPARK, gene_sets$All)
+
+
+plot_PP_threshold_counts(
+  gene_pip_asc, gene_pip_spark, gene_pip_all,
+  sources = c("ASC", "SPARK", "All"),
+  threshold = 0.7
+)
+
+
+
+gene_sets <- plot_gene_venn(
+  gene_pip_asc, gene_pip_spark, gene_pip_all,
+  sources = c("ASC", "SPARK", "All"),
+  threshold = 0.7
+)
+
+print("Overlap for ASC and ALL")
+intersect(gene_sets$ASC, gene_sets$All)
+print("Overlap for SPARK and ALL")
+intersect(gene_sets$SPARK, gene_sets$All)
+
+
+DT::datatable(gene_pip_asc[gene_pip_asc$PP > 0.5,],caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Genes with PP >0.5, from ASC'),options = list(pageLength = 10) )
+
+
+DT::datatable(gene_pip_spark[gene_pip_spark$PP > 0.5,],caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Genes with PP >0.5, from SPARK'),options = list(pageLength = 10) )
+
+
+DT::datatable(gene_pip_all[gene_pip_all$PP > 0.5,],caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Genes with PP >0.5, from ALL'),options = list(pageLength = 10) )
+
+```
+
