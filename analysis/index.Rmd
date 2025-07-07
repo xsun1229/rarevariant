@@ -14,7 +14,9 @@ Revision for rare variant project
 
 [MIRAGE results -- missense annotation updated](mirage_mis.html)
 
-[Comparing MIRAGE results from collective data with sub cohorts](mirage_subcohort.html)
+[Comparing MIRAGE results from collective data with sub cohorts](mirage_subcohort_originannotation.html)
+
+Not used
 
 [MIRAGE results -- lof & missense annotation updated](mirage_lofmis.html)
 

@@ -23,7 +23,50 @@ cat <- c("highPLI", "medPLI", "lowPLI", "likely pathogenic", "ambiguous", "likel
 cat_old <- c("highPLI", "medPLI", "lowPLI", "highMPC", "medMPC", "lowMPC")
 ```
 
-# Overview of input
+We are addressing the reviews' comments:
+
+```
+R1:
+3)    More rigorous prediction scores (i.e., REVEL, Alpha-missense) can be included for the stratification of missense variants.
+
+
+R2:
+2.  	The authors used the MPC score. I would argue this is now outdated and there are much better tools for assessing missense constaint and pathogenicity.
+```
+
+
+# Updating missense annotation using Alpha-missense score
+
+Alpha-missense score download: https://console.cloud.google.com/storage/browser/dm_alphamissense;tab=objects?pli=1&inv=1&invt=Ab0dvQ&prefix=&forceOnObjectsSortingFiltering=false
+
+Paper: https://www.science.org/doi/10.1126/science.adg7492
+
+The authors compared with alphamissense with other missense annotations: https://www.ebi.ac.uk/training/online/courses/alphafold/classifying-the-effects-of-missense-variants-using-alphamissense/introducing-missense-variants-and-alphamissense/
+
+```
+zcat /project/xinhe/xsun/rare_variants/5.revision/data/alphamis/AlphaMissense_hg38.tsv.gz |head
+# Copyright 2023 DeepMind Technologies Limited
+#
+# Licensed under CC BY-NC-SA 4.0 license
+CHROM  POS     REF     ALT     genome  uniprot_id      transcript_id   protein_variant am_pathogenicity        am_class
+chr1    69094   G       T       hg38    Q8NH21  ENST00000335137.4       V2L     0.2937  likely_benign
+chr1    69094   G       C       hg38    Q8NH21  ENST00000335137.4       V2L     0.2937  likely_benign
+chr1    69094   G       A       hg38    Q8NH21  ENST00000335137.4       V2M     0.3296  likely_benign
+chr1    69095   T       C       hg38    Q8NH21  ENST00000335137.4       V2A     0.2609  likely_benign
+chr1    69095   T       A       hg38    Q8NH21  ENST00000335137.4       V2E     0.2922  likely_benign
+```
+
+```
+| Category          | Min pathogenicity | Max pathogenicity | Total Variants |
+|-------------------|-----------|-----------|----------------|
+| likely_pathogenic | 0.5640    | 1.0000    | 22,770,557     |
+| likely_benign     | 0.0001    | 0.3400    | 40,917,351     |
+| ambiguous         | 0.3400    | 0.5640    | 8,009,648      |
+```
+
+More details for annotaion, see https://xsun1229.github.io/rarevariant/variant_annot.html
+
+# Overview of MIRAGE input
 
 ```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}
 

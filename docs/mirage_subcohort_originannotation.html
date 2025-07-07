@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="XSun" />
+
+<meta name="date" content="2025-07-07" />
+
+<title>Comparing results from ASC, SPARK, and collectively, original annotations</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.22/datatables.js"></script>
+<link href="site_libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">rarevariant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/myname/rarevariant">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Comparing results from ASC, SPARK, and
+collectively, original annotations</h1>
+<h4 class="author">XSun</h4>
+<h4 class="date">2025-07-07</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2025-07-07
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>rarevariant/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R
+Markdown file created these results, you’ll want to first commit it to
+the Git repo. If you’re still working on the analysis, you can ignore
+this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20250619code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20250619)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20250619code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20250619)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree5f4c75f4ede8c14823b622a479691ddcfdc7d7fctargetblank5f4c75fa">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/xsun1229/rarevariant/tree/5f4c75f4ede8c14823b622a479691ddcfdc7d7fc" target="_blank">5f4c75f</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree5f4c75f4ede8c14823b622a479691ddcfdc7d7fctargetblank5f4c75fa"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/xsun1229/rarevariant/tree/5f4c75f4ede8c14823b622a479691ddcfdc7d7fc" target="_blank">5f4c75f</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Untracked files:
+    Untracked:  VennDiagram.2025-07-07_14-59-56.log
+    Untracked:  analysis/mirage_subcohort_originannotation.Rmd
+
+Unstaged changes:
+    Deleted:    VennDiagram.2025-07-02_09-39-54.log
+    Deleted:    VennDiagram.2025-07-02_09-39-55.log
+    Deleted:    VennDiagram.2025-07-02_09-54-02.log
+    Deleted:    VennDiagram.2025-07-02_09-54-03.log
+    Deleted:    VennDiagram.2025-07-02_09-55-51.log
+    Deleted:    VennDiagram.2025-07-02_10-13-22.log
+    Deleted:    VennDiagram.2025-07-02_10-13-23.log
+    Deleted:    VennDiagram.2025-07-02_10-20-58.log
+    Deleted:    VennDiagram.2025-07-02_10-20-59.log
+    Modified:   analysis/variant_annot.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with
+<code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>library(ggplot2)
+library(dplyr)
+library(ggrepel)
+library(data.table)
+library(tidyr)
+library(gridExtra)
+
+#cat &lt;- c(&quot;high LOEUF oe&quot;, &quot;med LOEUF oe&quot;, &quot;low LOEUF oe&quot;, &quot;likely pathogenic&quot;, &quot;ambiguous&quot;, &quot;likely benign&quot;)
+cat &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;highMPC&quot;, &quot;medMPC&quot;, &quot;lowMPC&quot;)
+#cat_old &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;highMPC&quot;, &quot;medMPC&quot;, &quot;lowMPC&quot;)
+
+lof_cats &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;)
+
+
+plot_PP_threshold_counts &lt;- function(..., threshold = 0.5, sources = NULL) {
+  gene_lists &lt;- list(...)
+  
+  if (is.null(sources)) {
+    sources &lt;- paste0(&quot;Dataset_&quot;, seq_along(gene_lists))
+  }
+  
+  if (length(gene_lists) != length(sources)) {
+    stop(&quot;Length of gene_lists and sources must match.&quot;)
+  }
+  
+  # Count genes passing the threshold
+  counts &lt;- data.frame(
+    source = sources,
+    pass_PP = sapply(gene_lists, function(df) sum(df$post_prob &gt; threshold))
+  )
+  
+  # Plot
+  library(ggplot2)
+  ggplot(counts, aes(x = source, y = pass_PP, fill = source)) +
+    geom_bar(stat = &quot;identity&quot;, width = 0.6) +
+    geom_text(aes(label = pass_PP), vjust = -0.5, size = 5) +
+    scale_fill_brewer(palette = &quot;Set2&quot;) +
+    theme_minimal() +
+    labs(
+      x = &quot;Dataset&quot;,
+      y = paste0(&quot;Number of genes with PP &gt; &quot;, threshold),
+      title = paste0(&quot;Genes with Posterior Probability &gt; &quot;, threshold)
+    ) +
+    theme(
+      legend.position = &quot;none&quot;,
+      axis.text = element_text(size = 12),
+      axis.title = element_text(size = 14),
+      plot.title = element_text(size = 16, face = &quot;bold&quot;, hjust = 0.5)
+    )
+}
+
+plot_gene_venn &lt;- function(..., 
+                           sources = NULL, 
+                           threshold = 0.5, 
+                           save_file = FALSE, 
+                           filename = &quot;gene_venn.png&quot;, 
+                           width = 6, height = 6, dpi = 300,
+                           return_gene_sets = TRUE) {
+  # Required packages
+  require(VennDiagram)
+  require(RColorBrewer)
+  require(grid)
+  
+  gene_dfs &lt;- list(...)
+  
+  if (is.null(sources)) {
+    sources &lt;- paste0(&quot;Dataset_&quot;, seq_along(gene_dfs))
+  }
+  
+  if (length(gene_dfs) != length(sources)) {
+    stop(&quot;The number of gene data frames and sources must match.&quot;)
+  }
+  
+  # Extract gene sets with post_prob &gt; threshold
+  gene_sets &lt;- lapply(gene_dfs, function(df) {
+    df$Gene[df$post_prob &gt; threshold]
+  })
+  names(gene_sets) &lt;- sources
+  
+  # Define fill colors
+  set2_colors &lt;- brewer.pal(n = length(gene_sets), name = &quot;Set2&quot;)
+  
+  # Create Venn diagram
+  venn_obj &lt;- venn.diagram(
+    x = gene_sets,
+    filename = if (save_file) filename else NULL,
+    fill = set2_colors,
+    alpha = 0.6,
+    cex = 1.5,
+    cat.cex = 1.5,
+    cat.pos = 0,
+    cat.dist = 0.05,
+    margin = 0.1
+  )
+  
+  if (!save_file) {
+    grid.newpage()
+    grid.draw(venn_obj)
+  }
+  
+  # Return the gene sets or intersections
+  if (return_gene_sets) {
+    return(gene_sets)
+  }
+}</code></pre>
+<p>We are answering the reviewer’s comments</p>
+<pre><code>sub‐sample the Autism Sequencing Consortium data into distinct cohorts (e.g. ASC vs. SPARK) and perform cross‐cohort validation: select ηc and δ on one cohort, then test on the other. This would demonstrate that the estimates do not overfit a single dataset.</code></pre>
+<div id="variant-annotation-overview" class="section level1">
+<h1>Variant annotation overview</h1>
+<pre class="r"><code>print(&quot;Input for all&quot;)</code></pre>
+<pre><code>[1] &quot;Input for all&quot;</code></pre>
+<pre class="r"><code>mirage_input_all &lt;- read.table(&quot;/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt&quot;)
+new_mirage &lt;- table(mirage_input_all$group.index)[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+names(new_mirage) &lt;- cat
+sprintf(&quot;Number of rare-variants = %s&quot;,nrow(mirage_input_all))</code></pre>
+<pre><code>[1] &quot;Number of rare-variants = 1552731&quot;</code></pre>
+<pre class="r"><code>print(new_mirage)</code></pre>
+<pre><code>highPLI  medPLI  lowPLI highMPC  medMPC  lowMPC 
+                                                </code></pre>
+<pre class="r"><code>print(&quot;Input for ASC&quot;)</code></pre>
+<pre><code>[1] &quot;Input for ASC&quot;</code></pre>
+<pre class="r"><code>mirage_input_asc &lt;-  read.table(&quot;/project/xinhe/xsun/rare_variants/5.revision/data/ASC/mirage_input.txt&quot;)
+new_mirage &lt;- table(mirage_input_asc$group.index)[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+names(new_mirage) &lt;- cat
+sprintf(&quot;Number of rare-variants = %s&quot;,nrow(mirage_input_asc))</code></pre>
+<pre><code>[1] &quot;Number of rare-variants = 922998&quot;</code></pre>
+<pre class="r"><code>print(new_mirage)</code></pre>
+<pre><code>highPLI  medPLI  lowPLI highMPC  medMPC  lowMPC 
+                                                </code></pre>
+<pre class="r"><code>print(&quot;Input for SPARK&quot;)</code></pre>
+<pre><code>[1] &quot;Input for SPARK&quot;</code></pre>
+<pre class="r"><code>mirage_input_spark &lt;- read.table(&quot;/project/xinhe/xsun/rare_variants/5.revision/data/SPARK/mirage_input.txt&quot;)
+new_mirage &lt;- table(mirage_input_spark$group.index)[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+names(new_mirage) &lt;- cat
+sprintf(&quot;Number of rare-variants = %s&quot;,nrow(mirage_input_spark))</code></pre>
+<pre><code>[1] &quot;Number of rare-variants = 958716&quot;</code></pre>
+<pre class="r"><code>print(new_mirage)</code></pre>
+<pre><code>highPLI  medPLI  lowPLI highMPC  medMPC  lowMPC 
+                                                </code></pre>
+</div>
+<div id="parameters" class="section level1">
+<h1>Parameters</h1>
+<p>To assess consistency across cohorts, since the delta has already
+been set to 0.05, we performed MIRAGE separately on each cohort and
+compared the estimated parameters (η). The η estimates from the two
+cohorts were highly similar, suggesting stable parameter estimation
+across datasets.</p>
+<pre class="r"><code>mirage_res_asc &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_ASC_origin.RDS&quot;)
+
+est_asc &lt;- mirage_res_asc$eta.est[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+names(mirage_res_asc$eta.pvalue) &lt;- names(mirage_res_asc$eta.est)
+pval_asc &lt;- mirage_res_asc$eta.pvalue[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+
+mirage_res_spark &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_SPARK_origin.RDS&quot;)
+
+est_spark &lt;- mirage_res_spark$eta.est[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+names(mirage_res_spark$eta.pvalue) &lt;- names(mirage_res_spark$eta.est)
+pval_spark &lt;- mirage_res_spark$eta.pvalue[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+
+
+est_all &lt;- c(0.738664291977854,0.701330924907413,0.0931459290392402,0.366135847737628,0.0731974976958973,0.0386167362363095)
+pval_all &lt;- c(6.27443545252015e-05, 0.00717339131657623,0.0111348018747769,0.000154378698242592,0.00288797711761288,0.000228576143801889)</code></pre>
+<pre class="r"><code>n &lt;- length(cat)
+
+df_long &lt;- data.frame(
+  cat = rep(cat, times = 3),  # each cat appears 3 times (once per source)
+  est = c(est_asc, est_spark, est_all),
+  pval = c(pval_asc, pval_spark, pval_all),
+  source = rep(c(&quot;ASC&quot;, &quot;SPARK&quot;, &quot;All&quot;), each = n)  # source groups repeat every n rows
+)
+
+# Define LoF vs Missense groups
+
+df_long$legend &lt;- ifelse(df_long$cat %in% lof_cats, &quot;LoF&quot;, &quot;Missense&quot;)
+df_long$legend &lt;- factor(df_long$legend, levels = c(&quot;LoF&quot;, &quot;Missense&quot;))
+
+# Set desired order of categories
+df_long$cat &lt;- factor(df_long$cat, levels = cat)
+
+# Plot
+p &lt;- ggplot(df_long, aes(x = cat, y = est, fill = legend)) +
+  # Main grouped bars
+  geom_bar(
+    aes(group = source),
+    stat = &quot;identity&quot;,
+    position = position_dodge(width = 0.8),
+    width = 0.6
+  ) +
+
+  # Add p-value significance stars above the bars
+  geom_text(
+    aes(label = ifelse(pval &lt; 0.05, &quot;*&quot;, &quot;&quot;), group = source),
+    position = position_dodge(width = 0.8),
+    vjust = -0.6, size = 6
+  ) +
+
+  # Add source labels inside the bars
+  geom_text(
+    aes(label = source, group = source),
+    position = position_dodge(width = 0.8),
+    vjust = 1.5, size = 3, color = &quot;black&quot;
+  ) +
+
+  # Add explanation for asterisk
+  annotate(&quot;text&quot;, x = Inf, y = 0.9, label = &quot;*: p-value &lt; 0.05&quot;, hjust = 1.1, size = 5) +
+
+  # Theme and styling
+  theme_minimal() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    legend.title = element_blank()
+  ) +
+  scale_y_continuous(breaks = seq(0, 1, 0.2), expand = expansion(mult = c(0, 0.1))) +
+  scale_fill_manual(values = c(&quot;LoF&quot; = &quot;orange&quot;, &quot;Missense&quot; = &quot;steelblue&quot;))
+
+# Print plot
+print(p)</code></pre>
+<p><img src="figure/mirage_subcohort_originannotation.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gene-level-results" class="section level1">
+<h1>Gene-level results</h1>
+<p>This is the gene level results for running MIRAGE separately.</p>
+<pre class="r"><code>gene_pip_asc &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_ASC_origin.RDS&quot;)
+gene_pip_spark &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_SPARK_origin.RDS&quot;)
+
+gene_pip_all &lt;- read.csv(&quot;/project2/xinhe/xsun/rare_variants/4.additional_analysis/data/data_manhattan_plot_AllInheritedVariant_deltafixed_20231102.csv&quot;)
+
+plot_PP_threshold_counts(
+  gene_pip_asc, gene_pip_spark, gene_pip_all,
+  sources = c(&quot;ASC&quot;, &quot;SPARK&quot;, &quot;All&quot;),
+  threshold = 0.5
+)</code></pre>
+<p><img src="figure/mirage_subcohort_originannotation.Rmd/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>gene_sets &lt;- plot_gene_venn(
+  gene_pip_asc, gene_pip_spark, gene_pip_all,
+  sources = c(&quot;ASC&quot;, &quot;SPARK&quot;, &quot;All&quot;),
+  threshold = 0.5
+)</code></pre>
+<p><img src="figure/mirage_subcohort_originannotation.Rmd/unnamed-chunk-5-2.png" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>print(&quot;Overlap for ASC and ALL&quot;)</code></pre>
+<pre><code>[1] &quot;Overlap for ASC and ALL&quot;</code></pre>
+<pre class="r"><code>intersect(gene_sets$ASC, gene_sets$All)</code></pre>
+<pre><code>[1] &quot;ARAP2&quot; &quot;AHNAK&quot;</code></pre>
+<pre class="r"><code>print(&quot;Overlap for SPARK and ALL&quot;)</code></pre>
+<pre><code>[1] &quot;Overlap for SPARK and ALL&quot;</code></pre>
+<pre class="r"><code>intersect(gene_sets$SPARK, gene_sets$All)</code></pre>
+<pre><code>[1] &quot;LMNB1&quot; &quot;PTPRF&quot;</code></pre>
+<pre class="r"><code>plot_PP_threshold_counts(
+  gene_pip_asc, gene_pip_spark, gene_pip_all,
+  sources = c(&quot;ASC&quot;, &quot;SPARK&quot;, &quot;All&quot;),
+  threshold = 0.7
+)</code></pre>
+<p><img src="figure/mirage_subcohort_originannotation.Rmd/unnamed-chunk-5-3.png" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>gene_sets &lt;- plot_gene_venn(
+  gene_pip_asc, gene_pip_spark, gene_pip_all,
+  sources = c(&quot;ASC&quot;, &quot;SPARK&quot;, &quot;All&quot;),
+  threshold = 0.7
+)</code></pre>
+<p><img src="figure/mirage_subcohort_originannotation.Rmd/unnamed-chunk-5-4.png" width="480" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>print(&quot;Overlap for ASC and ALL&quot;)</code></pre>
+<pre><code>[1] &quot;Overlap for ASC and ALL&quot;</code></pre>
+<pre class="r"><code>intersect(gene_sets$ASC, gene_sets$All)</code></pre>
+<pre><code>character(0)</code></pre>
+<pre class="r"><code>print(&quot;Overlap for SPARK and ALL&quot;)</code></pre>
+<pre><code>[1] &quot;Overlap for SPARK and ALL&quot;</code></pre>
+<pre class="r"><code>intersect(gene_sets$SPARK, gene_sets$All)</code></pre>
+<pre><code>character(0)</code></pre>
+<pre class="r"><code>DT::datatable(gene_pip_asc[gene_pip_asc$PP &gt; 0.5,],caption = htmltools::tags$caption( style = &#39;caption-side: left; text-align: left; color:black;  font-size:150% ;&#39;,&#39;Genes with PP &gt;0.5, from ASC&#39;),options = list(pageLength = 10) )</code></pre>
+<div id="htmlwidget-de8cc9eb1fa1fdf58fa2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-de8cc9eb1fa1fdf58fa2">{"x":{"filter":"none","vertical":false,"caption":"<caption style=\"caption-side: left; text-align: left; color:black;  font-size:150% ;\">Genes with PP &gt;0.5, from ASC<\/caption>","data":[["4006","7186","13525","5414","4434","1492","812","14023","9017","1751","402","2670","66","3353","1046","8937","15982","13649","13841"],["DPH1","KIAA1109","SOCS6","GBP3","EP400","BTG4","ARAP2","SV2B","NARS2","C4orf36","AHNAK","CHID1","ABCD4","CTH","ATAD5","MYOM2","XIRP2","SPG11","STAG3"],[104.812944676949,57.1286368429484,53.411104896923,41.7936325784499,40.7250384015931,35.5480020838801,34.8619931351519,32.8939204427872,32.2663765747203,30.6023334241102,30.481195370257,29.1141520017426,26.119780287077,25.2973403545328,24.1204157726123,23.8535620879402,22.1151831593884,20.9314984900586,20.7969339529744],[0.846542701576362,0.750422432504649,0.737609306928178,0.68746726928216,0.681875466161388,0.651682934770312,0.647246622449995,0.633868479431084,0.629386719533266,0.61695350423243,0.616015743802728,0.605105790925883,0.578898658656769,0.571080343697073,0.559373450845348,0.556629622503494,0.537883610384417,0.524185149106531,0.522576286342783],[17,4,18,1,12,11,4,15,11,4,11,11,14,1,17,8,2,15,7],[2030110,122152333,70288901,89006666,131949920,111467526,35948221,91099950,78435961,86876205,62433542,867860,74285423,70411218,30831970,2045040,166888487,44562696,100177563],[0.846542701576362,0.750422432504649,0.737609306928178,0.68746726928216,0.681875466161388,0.651682934770312,0.647246622449995,0.633868479431084,0.629386719533266,0.61695350423243,0.616015743802729,0.605105790925883,0.578898658656769,0.571080343697073,0.559373450845348,0.556629622503494,0.537883610384417,0.524185149106531,0.522576286342783],[0.153457298423638,0.201517432959495,0.221808519663604,0.244489572427163,0.259216564709453,0.274066648129492,0.285307609475279,0.295410598361984,0.303766451929178,0.311694456313017,0.318266256302495,0.324651919033464,0.332071105364984,0.338988859003409,0.345764705013492,0.35186505954368,0.358350431900851,0.364876232955996,0.37079978457185]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Gene<\/th>\n      <th>BF<\/th>\n      <th>post_prob<\/th>\n      <th>chr<\/th>\n      <th>pos<\/th>\n      <th>PP<\/th>\n      <th>FDR<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>DT::datatable(gene_pip_spark[gene_pip_spark$PP &gt; 0.5,],caption = htmltools::tags$caption( style = &#39;caption-side: left; text-align: left; color:black;  font-size:150% ;&#39;,&#39;Genes with PP &gt;0.5, from SPARK&#39;),options = list(pageLength = 10) )</code></pre>
+<div id="htmlwidget-48defda8782ef968da74" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-48defda8782ef968da74">{"x":{"filter":"none","vertical":false,"caption":"<caption style=\"caption-side: left; text-align: left; color:black;  font-size:150% ;\">Genes with PP &gt;0.5, from SPARK<\/caption>","data":[["2470","7781","11495"],["CDK5R1","LMNB1","PTPRF"],[46.7976694180373,43.5432713336652,26.0887129964255],[0.711235972823203,0.696210326149459,0.578608508929801],[17,5,1],[32486619,126776623,43525187],[0.711235972823203,0.696210326149459,0.578608508929801],[0.288764027176797,0.296276850513669,0.337981730699179]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Gene<\/th>\n      <th>BF<\/th>\n      <th>post_prob<\/th>\n      <th>chr<\/th>\n      <th>pos<\/th>\n      <th>PP<\/th>\n      <th>FDR<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>DT::datatable(gene_pip_all[gene_pip_all$PP &gt; 0.5,],caption = htmltools::tags$caption( style = &#39;caption-side: left; text-align: left; color:black;  font-size:150% ;&#39;,&#39;Genes with PP &gt;0.5, from ALL&#39;),options = list(pageLength = 10) )</code></pre>
+<div id="htmlwidget-8162b872ed07ea29f25d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8162b872ed07ea29f25d">{"x":{"filter":"none","vertical":false,"caption":"<caption style=\"caption-side: left; text-align: left; color:black;  font-size:150% ;\">Genes with PP &gt;0.5, from ALL<\/caption>","data":[[],[],[],[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>X<\/th>\n      <th>Gene<\/th>\n      <th>BF<\/th>\n      <th>post_prob<\/th>\n      <th>chr<\/th>\n      <th>pos<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[1,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="run-mirage-using-fixed-parameters" class="section level1">
+<h1>Run MIRAGE using fixed parameters</h1>
+<p>we run with the entire dataset with the parameters estimated from
+each cohort</p>
+<p>Shengtong’s results: <a
+href="https://han16.github.io/rare-var-project/cross_cohort_validation.html"
+class="uri">https://han16.github.io/rare-var-project/cross_cohort_validation.html</a></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.0 (2022-04-22)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /software/openblas-0.3.13-el7-x86_64/lib/libopenblas_haswellp-r0.3.13.so
+
+locale:
+[1] C
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+[1] RColorBrewer_1.1-3  VennDiagram_1.7.3   futile.logger_1.4.3
+[4] gridExtra_2.3       tidyr_1.3.0         data.table_1.14.2  
+[7] ggrepel_0.9.1       dplyr_1.1.4         ggplot2_3.5.1      
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.0     xfun_0.41            bslib_0.3.1         
+ [4] purrr_1.0.2          colorspace_2.0-3     vctrs_0.6.5         
+ [7] generics_0.1.2       htmltools_0.5.2      yaml_2.3.5          
+[10] utf8_1.2.2           rlang_1.1.2          jquerylib_0.1.4     
+[13] later_1.3.0          pillar_1.9.0         glue_1.6.2          
+[16] withr_2.5.0          lambda.r_1.2.4       lifecycle_1.0.4     
+[19] stringr_1.5.1        munsell_0.5.0        gtable_0.3.0        
+[22] workflowr_1.7.0      htmlwidgets_1.5.4    evaluate_0.15       
+[25] labeling_0.4.2       knitr_1.39           fastmap_1.1.0       
+[28] crosstalk_1.2.0      httpuv_1.6.5         fansi_1.0.3         
+[31] highr_0.9            Rcpp_1.0.12          DT_0.22             
+[34] promises_1.2.0.1     scales_1.3.0         formatR_1.12        
+[37] jsonlite_1.8.0       farver_2.1.0         fs_1.5.2            
+[40] digest_0.6.29        stringi_1.7.6        rprojroot_2.0.3     
+[43] cli_3.6.1            tools_4.2.0          magrittr_2.0.3      
+[46] sass_0.4.1           tibble_3.2.1         futile.options_1.0.1
+[49] pkgconfig_2.0.3      rmarkdown_2.25       rstudioapi_0.13     
+[52] R6_2.5.1             git2r_0.30.1         compiler_4.2.0      </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

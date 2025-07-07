@@ -14,6 +14,7 @@ We annotate the rare variants we collected using reviewer recommended scores
 
 ```{r}
 library(data.table)
+library(ggplot2)
 
 mirage_input <- fread("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt",header = T)
 
@@ -35,8 +36,10 @@ Alpha-missense score download: https://console.cloud.google.com/storage/browser/
 
 Paper: https://www.science.org/doi/10.1126/science.adg7492
 
-```{bash, eval=FALSE, echo=T}
-zcat AlphaMissense_hg38.tsv.gz |head
+The authors compared with alphamissense with other missense annotations: https://www.ebi.ac.uk/training/online/courses/alphafold/classifying-the-effects-of-missense-variants-using-alphamissense/introducing-missense-variants-and-alphamissense/
+
+```
+zcat /project/xinhe/xsun/rare_variants/5.revision/data/alphamis/AlphaMissense_hg38.tsv.gz |head
 # Copyright 2023 DeepMind Technologies Limited
 #
 # Licensed under CC BY-NC-SA 4.0 license
@@ -58,14 +61,14 @@ chr1    69095   T       A       hg38    Q8NH21  ENST00000335137.4       V2E     
 
 
 ```{r}
-mirage_amsocre <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_amscores.RDS")
+mirage_amsocre <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_mislof_added.RDS")
 mirage_amsocre <- as.data.table(mirage_amsocre)
 mirage_amsocre <- mirage_amsocre[,-c("key")]
 mirage_amsocre[, old_group := group_labels[group.index]]
 
-oldlofmisnow <- mirage_amsocre[!is.na(am_class) & group.index %in% 1:3]
-
-DT::datatable(oldlofmisnow,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Variants annotated as LoF before but missense now'),options = list(pageLength = 5) )
+# oldlofmisnow <- mirage_amsocre[!is.na(am_class) & group.index %in% 1:3]
+# 
+# DT::datatable(oldlofmisnow,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Variants annotated as LoF before but missense now'),options = list(pageLength = 5) )
 
 oldmisnanow <- mirage_amsocre[is.na(am_class) & group.index %in% 4:6]
 
@@ -75,4 +78,53 @@ mirage_amsocre[!is.na(am_class), old_group := am_class]
 table(mirage_amsocre$old_group)[c("highPLI","medPLI","lowPLI","likely_pathogenic","ambiguous","likely_benign")]
 
 ```
+
+
+# REVEL
+
+REVEL score download: https://sites.google.com/site/revelgenomics/downloads?authuser=0
+
+Paper: https://pubmed.ncbi.nlm.nih.gov/27666373/
+
+```
+head /project/xinhe/xsun/rare_variants/5.revision/data/revel/revel_with_transcript_ids
+chr,hg19_pos,grch38_pos,ref,alt,aaref,aaalt,REVEL,Ensembl_transcriptid
+1,35142,35142,G,A,T,M,0.027,ENST00000417324
+1,35142,35142,G,C,T,R,0.035,ENST00000417324
+1,35142,35142,G,T,T,K,0.043,ENST00000417324
+1,35143,35143,T,A,T,S,0.018,ENST00000417324
+1,35143,35143,T,C,T,A,0.034,ENST00000417324
+1,35143,35143,T,G,T,P,0.039,ENST00000417324
+1,35144,35144,A,C,C,W,0.012,ENST00000417324
+1,35145,35145,C,A,C,F,0.023,ENST00000417324
+1,35145,35145,C,G,C,S,0.029,ENST00000417324
+
+```
+
+82,100,678 variants in total
+
+
+# LOEUF
+
+LOEUF paper https://www.nature.com/articles/s41586-020-2308-7
+
+Data download https://gnomad.broadinstitute.org/downloads#v4-constraint under constraint
+
+**Differences between LOEUF and PLI**
+
+https://gnomad.broadinstitute.org/help/constraint#loeuf-vs-pli
+
+
+```{r fig.height=3, fig.width=5}
+
+ggplot(mirage_amsocre[!is.na(am_pathogenicity)], aes(x = am_pathogenicity)) +
+  geom_histogram(bins = 50, fill = "steelblue", color = "black") +
+  theme_minimal() +
+  labs(title = "AlphaMissense Pathogenicity Scores for all MIRAGE variants",
+       x = "AlphaMissense Pathogenicity",
+       y = "Count")
+
+```
+
+
 
