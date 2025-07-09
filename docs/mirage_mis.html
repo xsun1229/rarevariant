@@ -411,7 +411,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2025-07-07
+<strong>Last updated:</strong> 2025-07-09
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -545,15 +545,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree5f4c75f4ede8c14823b622a479691ddcfdc7d7fctargetblank5f4c75fa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree8bf2f9f0b6fe0390317c19bf7b587f2b8ee2fb5ftargetblank8bf2f9fa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/xsun1229/rarevariant/tree/5f4c75f4ede8c14823b622a479691ddcfdc7d7fc" target="_blank">5f4c75f</a>
+<a href="https://github.com/xsun1229/rarevariant/tree/8bf2f9f0b6fe0390317c19bf7b587f2b8ee2fb5f" target="_blank">8bf2f9f</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree5f4c75f4ede8c14823b622a479691ddcfdc7d7fctargetblank5f4c75fa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree8bf2f9f0b6fe0390317c19bf7b587f2b8ee2fb5ftargetblank8bf2f9fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -563,7 +563,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/xsun1229/rarevariant/tree/5f4c75f4ede8c14823b622a479691ddcfdc7d7fc" target="_blank">5f4c75f</a>.
+<a href="https://github.com/xsun1229/rarevariant/tree/8bf2f9f0b6fe0390317c19bf7b587f2b8ee2fb5f" target="_blank">8bf2f9f</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,23 +577,8 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Untracked files:
-    Untracked:  VennDiagram.2025-07-07_14-59-56.log
-    Untracked:  VennDiagram.2025-07-07_15-29-29.log
-    Untracked:  analysis/mirage_subcohort_originannotation.Rmd
-
 Unstaged changes:
-    Deleted:    VennDiagram.2025-07-02_09-39-54.log
-    Deleted:    VennDiagram.2025-07-02_09-39-55.log
-    Deleted:    VennDiagram.2025-07-02_09-54-02.log
-    Deleted:    VennDiagram.2025-07-02_09-54-03.log
-    Deleted:    VennDiagram.2025-07-02_09-55-51.log
-    Deleted:    VennDiagram.2025-07-02_10-13-22.log
-    Deleted:    VennDiagram.2025-07-02_10-13-23.log
-    Deleted:    VennDiagram.2025-07-02_10-20-58.log
-    Deleted:    VennDiagram.2025-07-02_10-20-59.log
     Modified:   analysis/mirage_mis.Rmd
-    Modified:   analysis/variant_annot.Rmd
 
 </code></pre>
 <p>
@@ -639,6 +624,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/88cd93e4bfdfb6ec69f99bc9d0befa332ab0bb56/analysis/mirage_mis.Rmd" target="_blank">88cd93e</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-07
+</td>
+<td>
+update
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/xsun1229/rarevariant/88cd93e4bfdfb6ec69f99bc9d0befa332ab0bb56/docs/mirage_mis.html" target="_blank">88cd93e</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-07
+</td>
+<td>
+update
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -839,6 +858,7 @@ library(ggrepel)
 library(data.table)
 library(tidyr)
 library(gridExtra)
+library(VennDiagram)
 
 mirage_res &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_misupdated.RDS&quot;)
 
@@ -907,43 +927,82 @@ sprintf(&quot;Number of rare-variants = %s&quot;,nrow(mirage_input_mis_updated))
              3067              3461             71077            261445 
         ambiguous     likely benign 
            143866           1029039 </code></pre>
+<pre class="r"><code>highmpc &lt;- input[input$group.index == 4,]
+medmpc &lt;- input[input$group.index == 5,]
+lowmpc &lt;- input[input$group.index == 6,]
+
+lp &lt;- mirage_input_mis_updated[mirage_input_mis_updated$group.index == 4,]
+ab &lt;- mirage_input_mis_updated[mirage_input_mis_updated$group.index == 5,]
+lb &lt;- mirage_input_mis_updated[mirage_input_mis_updated$group.index == 6,]
+
+overlap_highlp &lt;- sum(highmpc$Variant %in% lp$Variant)
+overlap_medab &lt;- sum(medmpc$Variant %in% ab$Variant)
+overlap_lowlb &lt;- sum(lowmpc$Variant %in% lb$Variant)
+
+
+grid.newpage()
+venn.plot &lt;- draw.pairwise.venn(
+  area1 = nrow(highmpc),         # size of A
+  area2 = nrow(lp),         # size of B
+  cross.area = overlap_highlp,   # size of overlap A ∩ B
+  category = c(&quot;highmpc&quot;, &quot;likely_pathogenic&quot;),
+  fill = c(&quot;skyblue&quot;, &quot;pink1&quot;),
+  alpha = 0.5,
+  cex = 2,
+  cat.cex = 2,
+  cat.pos = c(-20, 20)
+)</code></pre>
+<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-2-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
+Past versions of unnamed-chunk-2-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_mis.Rmd/unnamed-chunk-2-1.png" target="_blank">35b59e7</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="parameter-estimation" class="section level1">
-<h1>Parameter estimation</h1>
-<pre class="r"><code>est &lt;- mirage_res$eta.est[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
-names(mirage_res$eta.pvalue) &lt;- names(mirage_res$eta.est)
-pval &lt;- mirage_res$eta.pvalue[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
-
-
-order &lt;- c(1:length(est))
-
-df &lt;- data.frame(est = est, pval = pval, cat = cat, order=order)
-df &lt;- df[sort(df$order,decreasing = T),]
-df$cat &lt;- factor(df$cat, levels = cat)
-
-df$fill &lt;- ifelse(df$order &lt;= 3, &quot;orange&quot;, &quot;steelblue&quot;)
-df$legend &lt;- ifelse(df$order &lt;= 3, &quot;LoF&quot;, &quot;Missense&quot;)
-
-# Convert the legend column to a factor and set the levels
-df$legend &lt;- factor(df$legend, levels = c(&quot;LoF&quot;, &quot;Missense&quot;))
-
-p &lt;- ggplot(df, aes(x = cat, y = est, fill = legend)) +
-  geom_bar(stat = &quot;identity&quot;, width = 0.6) + # Use the fill aesthetic
-  geom_text(aes(label = ifelse(pval &lt; 0.05, &quot;*&quot;, &quot;&quot;)), vjust = 0, size = 6) +
-  annotate(&quot;text&quot;, x = 6, y = 0.9, label = &quot;*: p-value &lt; 0.05&quot;, hjust = &quot;right&quot;, size = 6) +
-  theme_minimal() +
-  theme(
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
-    axis.text.y = element_text(size = 12),
-    legend.title = element_blank() # Hide the legend title
-  ) +
-  scale_y_continuous(breaks = seq(0, 1, 0.2)) +
-  scale_fill_manual(values = c(&quot;LoF&quot; = &quot;orange&quot;, &quot;Missense&quot; = &quot;steelblue&quot;)) # Define manual colors for the legend
-
-print(p)</code></pre>
-<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
+<pre class="r"><code>grid.newpage()
+venn.plot &lt;- draw.pairwise.venn(
+  area1 = nrow(medmpc),         # size of A
+  area2 = nrow(ab),         # size of B
+  cross.area = overlap_medab,   # size of overlap A ∩ B
+  category = c(&quot;medmpc&quot;, &quot;ambiguous &quot;),
+  fill = c(&quot;skyblue&quot;, &quot;pink1&quot;),
+  alpha = 0.5,
+  cex = 2,
+  cat.cex = 2,
+  cat.pos = c(-20, 20)
+)</code></pre>
+<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-3-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
 Past versions of unnamed-chunk-3-1.png
@@ -980,6 +1039,157 @@ XSun
 <tr>
 <td>
 <a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_mis.Rmd/unnamed-chunk-3-1.png" target="_blank">35b59e7</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>grid.newpage()
+
+venn.plot &lt;- draw.pairwise.venn(
+  area1 = nrow(lowmpc),         # size of A
+  area2 = nrow(lb),         # size of B
+  cross.area = overlap_lowlb,   # size of overlap A ∩ B
+  category = c(&quot;lowmpc&quot;, &quot;likely_benign&quot;),
+  fill = c(&quot;skyblue&quot;, &quot;pink1&quot;),
+  alpha = 0.5,
+  cex = 2,
+  cat.cex = 2,
+  cat.pos = c(-20, 20)
+)</code></pre>
+<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-4-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_mis.Rmd/unnamed-chunk-4-1.png" target="_blank">35b59e7</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-06-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code># venn.plot &lt;- draw.pairwise.venn(
+#   area1 = nrow(highmpc),         # size of A
+#   area2 = nrow(lb),         # size of B
+#   cross.area = overlap_highlp,   # size of overlap A ∩ B
+#   category = c(&quot;highmpc&quot;, &quot;likely_benign&quot;),
+#   fill = c(&quot;skyblue&quot;, &quot;pink1&quot;),
+#   alpha = 0.5,
+#   cex = 2,
+#   cat.cex = 2,
+#   cat.pos = c(-20, 20)
+# )
+# 
+# # To plot in RStudio Viewer
+# grid.newpage()
+# grid.draw(venn.plot)</code></pre>
+</div>
+<div id="parameter-estimation" class="section level1">
+<h1>Parameter estimation</h1>
+<pre class="r"><code>est &lt;- mirage_res$eta.est[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+names(mirage_res$eta.pvalue) &lt;- names(mirage_res$eta.est)
+pval &lt;- mirage_res$eta.pvalue[c(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;)]
+
+
+order &lt;- c(1:length(est))
+
+df &lt;- data.frame(est = est, pval = pval, cat = cat, order=order)
+df &lt;- df[sort(df$order,decreasing = T),]
+df$cat &lt;- factor(df$cat, levels = cat)
+
+df$fill &lt;- ifelse(df$order &lt;= 3, &quot;orange&quot;, &quot;steelblue&quot;)
+df$legend &lt;- ifelse(df$order &lt;= 3, &quot;LoF&quot;, &quot;Missense&quot;)
+
+# Convert the legend column to a factor and set the levels
+df$legend &lt;- factor(df$legend, levels = c(&quot;LoF&quot;, &quot;Missense&quot;))
+
+p &lt;- ggplot(df, aes(x = cat, y = est, fill = legend)) +
+  geom_bar(stat = &quot;identity&quot;, width = 0.6) + # Use the fill aesthetic
+  geom_text(aes(label = ifelse(pval &lt; 0.05, &quot;*&quot;, &quot;&quot;)), vjust = 0, size = 6) +
+  annotate(&quot;text&quot;, x = 6, y = 0.9, label = &quot;*: p-value &lt; 0.05&quot;, hjust = &quot;right&quot;, size = 6) +
+  theme_minimal() +
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    legend.title = element_blank() # Hide the legend title
+  ) +
+  scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+  scale_fill_manual(values = c(&quot;LoF&quot; = &quot;orange&quot;, &quot;Missense&quot; = &quot;steelblue&quot;)) # Define manual colors for the legend
+
+print(p)</code></pre>
+<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/0b8457e1a486048bb2c854a462b9de77848c4c4d/docs/figure/mirage_mis.Rmd/unnamed-chunk-5-1.png" target="_blank">0b8457e</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_mis.Rmd/unnamed-chunk-5-1.png" target="_blank">35b59e7</a>
 </td>
 <td>
 XSun
@@ -1063,215 +1273,6 @@ manhplot &lt;- ggplot(don, aes(x=poscum, y=post_prob)) +
 
 
 print(manhplot)</code></pre>
-<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-5-1.png" width="864" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
-Past versions of unnamed-chunk-5-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-5-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/xsun1229/rarevariant/blob/0b8457e1a486048bb2c854a462b9de77848c4c4d/docs/figure/mirage_mis.Rmd/unnamed-chunk-5-1.png" target="_blank">0b8457e</a>
-</td>
-<td>
-XSun
-</td>
-<td>
-2025-07-01
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_mis.Rmd/unnamed-chunk-5-1.png" target="_blank">35b59e7</a>
-</td>
-<td>
-XSun
-</td>
-<td>
-2025-06-24
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="bf-partition" class="section level2">
-<h2>BF partition</h2>
-<pre class="r"><code>dat &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/BFpartition_misupdated.RDS&quot;)
-
-dat_select &lt;- dat[dat$PP &gt; 0.5 &amp; !is.na(dat$PP),]
-dat_select &lt;- dat_select[,c(&quot;Gene&quot;,&quot;BF&quot;,&quot;g1_BF&quot;,&quot;g2_BF&quot;,&quot;g3_BF&quot;,&quot;g4_BF&quot;,&quot;g5_BF&quot;,&quot;g6_BF&quot;)]
-dat_select &lt;- dat_select[order(dat_select$BF, decreasing = T),]
-
-dat_select$logbf &lt;- log2(dat_select$BF)
-dat_select$g1_BF &lt;- log2(as.numeric(dat_select$g1_BF))
-dat_select$g2_BF &lt;- log2(as.numeric(dat_select$g2_BF))
-dat_select$g3_BF &lt;- log2(as.numeric(dat_select$g3_BF))
-dat_select$g4_BF &lt;- log2(as.numeric(dat_select$g4_BF))
-dat_select$g5_BF &lt;- log2(as.numeric(dat_select$g5_BF))
-dat_select$g6_BF &lt;- log2(as.numeric(dat_select$g6_BF))
-
-colnames(dat_select)[3:8] &lt;- cat
-
-
-dat_select[is.na(dat_select)] &lt;- 0
-#dat_select[dat_select &lt; 0] &lt;- 0
-dat_select[,2:ncol(dat_select)] &lt;- abs(dat_select[,2:ncol(dat_select)])
-
-# #abs
-# numeric_columns &lt;- sapply(dat_select, is.numeric)
-# for (col in names(dat_select)[numeric_columns]) {
-#   dat_select[[col]] &lt;- ifelse(dat_select[[col]] &lt; 0, abs(dat_select[[col]]), dat_select[[col]])
-# }
-
-dat_select$sum_bf &lt;- rowSums(dat_select[,3:8])
-dat_select$Gene &lt;- factor(dat_select$Gene, levels = dat_select$Gene)
-
-df_long &lt;- dat_select %&gt;%
-  dplyr::select(Gene, highPLI, medPLI, lowPLI, `likely pathogenic`, ambiguous, `likely benign`) %&gt;%
-  tidyr::pivot_longer(cols = -Gene, names_to = &quot;variant_type&quot;, values_to = &quot;value&quot;)
-
-
-colnames(df_long)[2] &lt;- &quot;Variant Group&quot;
-df_long$`Variant Group` &lt;- factor(df_long$`Variant Group`, levels = cat)
-
-# Now plot using ggplot
-p &lt;- ggplot(df_long, aes(x = Gene, y = value, fill = `Variant Group`)) +
-  geom_bar(stat = &quot;identity&quot;, position = &quot;stack&quot;) +
-  labs(#title = &quot;BF and variant type per gene&quot;, 
-       y = expression(log[2]*&quot;BF&quot;),
-       x = paste(nrow(dat_select),&quot;genes with PP &gt; 0.5&quot;)) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 12), 
-    axis.text.y = element_text(size = 12), 
-    axis.title.x = element_text(size = 14),
-    axis.title.y = element_text(size = 14),
-  ) +
-  #scale_fill_manual(values = c(&quot;#B22222&quot;, &quot;#FF8C00&quot;, &quot;#FFD700&quot;,&quot;#4682B4&quot;,&quot;#5F9EA0&quot;,&quot;#87CEFA&quot;))
-  scale_fill_manual(values = palette()[2:7])
-
-print(p)</code></pre>
-<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-6-1.png" width="864" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
-Past versions of unnamed-chunk-6-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-6-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/xsun1229/rarevariant/blob/0b8457e1a486048bb2c854a462b9de77848c4c4d/docs/figure/mirage_mis.Rmd/unnamed-chunk-6-1.png" target="_blank">0b8457e</a>
-</td>
-<td>
-XSun
-</td>
-<td>
-2025-07-01
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_mis.Rmd/unnamed-chunk-6-1.png" target="_blank">35b59e7</a>
-</td>
-<td>
-XSun
-</td>
-<td>
-2025-06-24
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div id="validation" class="section level1">
-<h1>Validation</h1>
-<div id="enrichment-results" class="section level2">
-<h2>Enrichment results</h2>
-<pre class="r"><code>num_topgenes &lt;- sum(gene_pip$PP &gt; 0.5)
-
-load(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/enrichment_misupdated.rdata&quot;)
-
-df_sum &lt;- df_sum[-which(rownames(df_sum) == &quot;constraint gene&quot;),]
-df_sum &lt;- df_sum[-which(rownames(df_sum) == &quot;AutismKB&quot;),]
-
-rownames(df_sum)[which(rownames(df_sum) == &quot;ID gene&quot;)] &lt;- &quot;ID&quot;
-rownames(df_sum)[which(rownames(df_sum) == &quot;SCZ gene&quot;)] &lt;- &quot;SCZ&quot;
-rownames(df_sum)[which(rownames(df_sum) == &quot;FMRP&quot;)] &lt;- &quot;FMRP target&quot;
-rownames(df_sum)[which(rownames(df_sum) == &quot;High&quot;)] &lt;- &quot;TADA&quot;
-#rownames(df_sum)[which(rownames(df_sum) == &quot;High&quot;)] &lt;- &quot;TADA High&quot;
-#rownames(df_sum)[which(rownames(df_sum) == &quot;Mod&quot;)] &lt;- &quot;TADA Med&quot;
-rownames(df_sum)[which(rownames(df_sum) == &quot;SFARI_gene&quot;)] &lt;- &quot;SFARI&quot;
-rownames(df_sum)[which(rownames(df_sum) == &quot;Haploinsuff&quot;)] &lt;- &quot;HI&quot;
-
-#order &lt;- c(&quot;SFARI&quot;,&quot;TADA High&quot;,&quot;TADA Med&quot;,&quot;ID&quot;,&quot;SCZ&quot;,&quot;FMRP target&quot;,&quot;PSD&quot;,&quot;RVIS&quot;,&quot;HI&quot;)
-order &lt;- c(&quot;SFARI&quot;,&quot;TADA&quot;,&quot;ID&quot;,&quot;SCZ&quot;,&quot;FMRP target&quot;,&quot;PSD&quot;,&quot;RVIS&quot;,&quot;HI&quot;)
-
-
-df_plot &lt;- df_sum[,c(&quot;overlap_rate_mirage&quot;,&quot;overlap_rate_burden_combined&quot;,&quot;overlap_rate_burden_lof&quot;,&quot;overlap_rate_acat&quot;,&quot;overlap_rate_all&quot;)]
-colnames(df_plot) &lt;- c(
-  sprintf(&quot;Top %d genes by MIRAGE&quot;, num_topgenes),
-  sprintf(&quot;Top %d genes by burden test (likely pathogenic&amp;LoF)&quot;, num_topgenes),
-  sprintf(&quot;Top %d genes by burden test (LoF)&quot;, num_topgenes),
-  sprintf(&quot;Top %d genes by ACAT&quot;, num_topgenes),
-  &quot;All genes&quot;
-)
-df_plot$category &lt;- rownames(df_plot)
-
-df_fisher &lt;- df_sum[,c(1,15:19)]
-
-df_plot &lt;- df_plot %&gt;%
-  mutate(category = as.factor(category)) %&gt;%
-  mutate(across(-category, as.numeric))
-
-# Transform the data from wide to long format
-long_df &lt;- pivot_longer(df_plot, cols = -category, names_to = &quot;Groups&quot;, values_to = &quot;value&quot;)
-long_df$Groups &lt;- factor(long_df$Groups, levels = colnames(df_plot))
-
-p &lt;- ggplot(long_df, aes(x = factor(category, levels = order), y = value, fill = Groups)) +
-  geom_bar(stat = &quot;identity&quot;, position = position_dodge(width = 0.7), width = 0.7) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(x = &quot;Gene sets&quot;, y = &quot;Overlap with Gene sets&quot;, fill = &quot;Groups&quot;)
-
-print(p)</code></pre>
 <p><img src="figure/mirage_mis.Rmd/unnamed-chunk-7-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
@@ -1344,25 +1345,64 @@ XSun
 </div>
 </div>
 </div>
-</div>
-<div id="other-methods" class="section level1">
-<h1>Other methods</h1>
-<pre class="r"><code>source(&quot;/project/xinhe/xsun/r_functions/qqplot_multi.R&quot;)
+<div id="bf-partition" class="section level2">
+<h2>BF partition</h2>
+<pre class="r"><code>dat &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/BFpartition_misupdated.RDS&quot;)
 
-burden_pvalues &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/burden_pvalues_misupdated.RDS&quot;)
-burden_pvalues &lt;- as.data.frame(burden_pvalues)
+dat_select &lt;- dat[dat$PP &gt; 0.5 &amp; !is.na(dat$PP),]
+dat_select &lt;- dat_select[,c(&quot;Gene&quot;,&quot;BF&quot;,&quot;g1_BF&quot;,&quot;g2_BF&quot;,&quot;g3_BF&quot;,&quot;g4_BF&quot;,&quot;g5_BF&quot;,&quot;g6_BF&quot;)]
+dat_select &lt;- dat_select[order(dat_select$BF, decreasing = T),]
 
-ACAT &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/acat_misupdated.RDS&quot;)
+dat_select$logbf &lt;- log2(dat_select$BF)
+dat_select$g1_BF &lt;- log2(as.numeric(dat_select$g1_BF))
+dat_select$g2_BF &lt;- log2(as.numeric(dat_select$g2_BF))
+dat_select$g3_BF &lt;- log2(as.numeric(dat_select$g3_BF))
+dat_select$g4_BF &lt;- log2(as.numeric(dat_select$g4_BF))
+dat_select$g5_BF &lt;- log2(as.numeric(dat_select$g5_BF))
+dat_select$g6_BF &lt;- log2(as.numeric(dat_select$g6_BF))
+
+colnames(dat_select)[3:8] &lt;- cat
 
 
-pvalues &lt;- list(&#39;Burden test (LoF)&#39; = burden_pvalues$LoF_pvalue,
-                &#39;Burden test (likely pathogenic &amp;LoF)&#39; = burden_pvalues$fisher_combine_pvalue, 
-                &#39;ACAT&#39; = ACAT$ACAT_pvalue)
+dat_select[is.na(dat_select)] &lt;- 0
+#dat_select[dat_select &lt; 0] &lt;- 0
+dat_select[,2:ncol(dat_select)] &lt;- abs(dat_select[,2:ncol(dat_select)])
 
-p &lt;- qqplot_multi(pvalues_list = pvalues,legend_names = c(&#39;Burden test (LoF)&#39;,&#39;Burden test (likely pathogenic &amp;LoF)&#39;,&#39;ACAT&#39;))
+# #abs
+# numeric_columns &lt;- sapply(dat_select, is.numeric)
+# for (col in names(dat_select)[numeric_columns]) {
+#   dat_select[[col]] &lt;- ifelse(dat_select[[col]] &lt; 0, abs(dat_select[[col]]), dat_select[[col]])
+# }
+
+dat_select$sum_bf &lt;- rowSums(dat_select[,3:8])
+dat_select$Gene &lt;- factor(dat_select$Gene, levels = dat_select$Gene)
+
+df_long &lt;- dat_select %&gt;%
+  dplyr::select(Gene, highPLI, medPLI, lowPLI, `likely pathogenic`, ambiguous, `likely benign`) %&gt;%
+  tidyr::pivot_longer(cols = -Gene, names_to = &quot;variant_type&quot;, values_to = &quot;value&quot;)
+
+
+colnames(df_long)[2] &lt;- &quot;Variant Group&quot;
+df_long$`Variant Group` &lt;- factor(df_long$`Variant Group`, levels = cat)
+
+# Now plot using ggplot
+p &lt;- ggplot(df_long, aes(x = Gene, y = value, fill = `Variant Group`)) +
+  geom_bar(stat = &quot;identity&quot;, position = &quot;stack&quot;) +
+  labs(#title = &quot;BF and variant type per gene&quot;, 
+       y = expression(log[2]*&quot;BF&quot;),
+       x = paste(nrow(dat_select),&quot;genes with PP &gt; 0.5&quot;)) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12), 
+    axis.text.y = element_text(size = 12), 
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+  ) +
+  #scale_fill_manual(values = c(&quot;#B22222&quot;, &quot;#FF8C00&quot;, &quot;#FFD700&quot;,&quot;#4682B4&quot;,&quot;#5F9EA0&quot;,&quot;#87CEFA&quot;))
+  scale_fill_manual(values = palette()[2:7])
 
 print(p)</code></pre>
-<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-8-1.png" width="864" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
 Past versions of unnamed-chunk-8-1.png
@@ -1412,6 +1452,117 @@ XSun
 </div>
 </div>
 </div>
+</div>
+<div id="validation" class="section level1">
+<h1>Validation</h1>
+<div id="enrichment-results" class="section level2">
+<h2>Enrichment results</h2>
+<pre class="r"><code>num_topgenes &lt;- sum(gene_pip$PP &gt; 0.5)
+
+load(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/enrichment_misupdated.rdata&quot;)
+
+df_sum &lt;- df_sum[-which(rownames(df_sum) == &quot;constraint gene&quot;),]
+df_sum &lt;- df_sum[-which(rownames(df_sum) == &quot;AutismKB&quot;),]
+
+rownames(df_sum)[which(rownames(df_sum) == &quot;ID gene&quot;)] &lt;- &quot;ID&quot;
+rownames(df_sum)[which(rownames(df_sum) == &quot;SCZ gene&quot;)] &lt;- &quot;SCZ&quot;
+rownames(df_sum)[which(rownames(df_sum) == &quot;FMRP&quot;)] &lt;- &quot;FMRP target&quot;
+rownames(df_sum)[which(rownames(df_sum) == &quot;High&quot;)] &lt;- &quot;TADA&quot;
+#rownames(df_sum)[which(rownames(df_sum) == &quot;High&quot;)] &lt;- &quot;TADA High&quot;
+#rownames(df_sum)[which(rownames(df_sum) == &quot;Mod&quot;)] &lt;- &quot;TADA Med&quot;
+rownames(df_sum)[which(rownames(df_sum) == &quot;SFARI_gene&quot;)] &lt;- &quot;SFARI&quot;
+rownames(df_sum)[which(rownames(df_sum) == &quot;Haploinsuff&quot;)] &lt;- &quot;HI&quot;
+
+#order &lt;- c(&quot;SFARI&quot;,&quot;TADA High&quot;,&quot;TADA Med&quot;,&quot;ID&quot;,&quot;SCZ&quot;,&quot;FMRP target&quot;,&quot;PSD&quot;,&quot;RVIS&quot;,&quot;HI&quot;)
+order &lt;- c(&quot;SFARI&quot;,&quot;TADA&quot;,&quot;ID&quot;,&quot;SCZ&quot;,&quot;FMRP target&quot;,&quot;PSD&quot;,&quot;RVIS&quot;,&quot;HI&quot;)
+
+
+df_plot &lt;- df_sum[,c(&quot;overlap_rate_mirage&quot;,&quot;overlap_rate_burden_combined&quot;,&quot;overlap_rate_burden_lof&quot;,&quot;overlap_rate_acat&quot;,&quot;overlap_rate_all&quot;)]
+colnames(df_plot) &lt;- c(
+  sprintf(&quot;Top %d genes by MIRAGE&quot;, num_topgenes),
+  sprintf(&quot;Top %d genes by burden test (likely pathogenic&amp;LoF)&quot;, num_topgenes),
+  sprintf(&quot;Top %d genes by burden test (LoF)&quot;, num_topgenes),
+  sprintf(&quot;Top %d genes by ACAT&quot;, num_topgenes),
+  &quot;All genes&quot;
+)
+df_plot$category &lt;- rownames(df_plot)
+
+df_fisher &lt;- df_sum[,c(1,15:19)]
+
+df_plot &lt;- df_plot %&gt;%
+  mutate(category = as.factor(category)) %&gt;%
+  mutate(across(-category, as.numeric))
+
+# Transform the data from wide to long format
+long_df &lt;- pivot_longer(df_plot, cols = -category, names_to = &quot;Groups&quot;, values_to = &quot;value&quot;)
+long_df$Groups &lt;- factor(long_df$Groups, levels = colnames(df_plot))
+
+p &lt;- ggplot(long_df, aes(x = factor(category, levels = order), y = value, fill = Groups)) +
+  geom_bar(stat = &quot;identity&quot;, position = position_dodge(width = 0.7), width = 0.7) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = &quot;Gene sets&quot;, y = &quot;Overlap with Gene sets&quot;, fill = &quot;Groups&quot;)
+
+print(p)</code></pre>
+<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-9-1.png" width="864" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/0b8457e1a486048bb2c854a462b9de77848c4c4d/docs/figure/mirage_mis.Rmd/unnamed-chunk-9-1.png" target="_blank">0b8457e</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="other-methods" class="section level1">
+<h1>Other methods</h1>
+<pre class="r"><code>source(&quot;/project/xinhe/xsun/r_functions/qqplot_multi.R&quot;)
+
+burden_pvalues &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/burden_pvalues_misupdated.RDS&quot;)
+burden_pvalues &lt;- as.data.frame(burden_pvalues)
+
+ACAT &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/acat_misupdated.RDS&quot;)
+
+
+pvalues &lt;- list(&#39;Burden test (LoF)&#39; = burden_pvalues$LoF_pvalue,
+                &#39;Burden test (likely pathogenic &amp;LoF)&#39; = burden_pvalues$fisher_combine_pvalue, 
+                &#39;ACAT&#39; = ACAT$ACAT_pvalue)
+
+p &lt;- qqplot_multi(pvalues_list = pvalues,legend_names = c(&#39;Burden test (LoF)&#39;,&#39;Burden test (likely pathogenic &amp;LoF)&#39;,&#39;ACAT&#39;))
+
+print(p)</code></pre>
+<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-10-1.png" width="480" style="display: block; margin: auto;" /></p>
+</div>
 <div id="comparing-with-results-in-initial-submission"
 class="section level1">
 <h1>Comparing with results in initial submission</h1>
@@ -1452,44 +1603,7 @@ p2 &lt;- ggplot(compare, aes(x = post_prob_old, y = post_prob_new)) +
     theme_minimal()
 
 grid.arrange(p1, p2,  ncol = 2)</code></pre>
-<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-9-1.png" width="768" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
-Past versions of unnamed-chunk-9-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-9-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/xsun1229/rarevariant/blob/0b8457e1a486048bb2c854a462b9de77848c4c4d/docs/figure/mirage_mis.Rmd/unnamed-chunk-9-1.png" target="_blank">0b8457e</a>
-</td>
-<td>
-XSun
-</td>
-<td>
-2025-07-01
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>genes_diff &lt;- compare[!is.na(compare$label),]
 
 cat_compare &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;highMPC/likely pathogenic&quot;, &quot;medMPC/ambiguous&quot;, &quot;lowMPC/likely benign&quot;)
@@ -1645,27 +1759,34 @@ locale:
 [1] C
 
 attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
+[1] grid      stats     graphics  grDevices utils     datasets  methods  
+[8] base     
 
 other attached packages:
-[1] gridExtra_2.3     tidyr_1.3.0       data.table_1.14.2 ggrepel_0.9.1    
-[5] dplyr_1.1.4       ggplot2_3.5.1    
+[1] VennDiagram_1.7.3   futile.logger_1.4.3 gridExtra_2.3      
+[4] tidyr_1.3.0         data.table_1.14.2   ggrepel_0.9.1      
+[7] dplyr_1.1.4         ggplot2_3.5.1      
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.12       highr_0.9         pillar_1.9.0      compiler_4.2.0   
- [5] bslib_0.3.1       later_1.3.0       jquerylib_0.1.4   git2r_0.30.1     
- [9] workflowr_1.7.0   tools_4.2.0       digest_0.6.29     jsonlite_1.8.0   
-[13] evaluate_0.15     lifecycle_1.0.4   tibble_3.2.1      gtable_0.3.0     
-[17] pkgconfig_2.0.3   rlang_1.1.2       cli_3.6.1         rstudioapi_0.13  
-[21] crosstalk_1.2.0   yaml_2.3.5        xfun_0.41         fastmap_1.1.0    
-[25] withr_2.5.0       stringr_1.5.1     knitr_1.39        htmlwidgets_1.5.4
-[29] generics_0.1.2    fs_1.5.2          vctrs_0.6.5       sass_0.4.1       
-[33] DT_0.22           tidyselect_1.2.0  rprojroot_2.0.3   grid_4.2.0       
-[37] glue_1.6.2        R6_2.5.1          fansi_1.0.3       rmarkdown_2.25   
-[41] farver_2.1.0      purrr_1.0.2       magrittr_2.0.3    whisker_0.4      
-[45] scales_1.3.0      promises_1.2.0.1  htmltools_0.5.2   colorspace_2.0-3 
-[49] httpuv_1.6.5      labeling_0.4.2    utf8_1.2.2        stringi_1.7.6    
-[53] munsell_0.5.0    </code></pre>
+ [1] tidyselect_1.2.0     xfun_0.41            bslib_0.3.1         
+ [4] purrr_1.0.2          colorspace_2.0-3     vctrs_0.6.5         
+ [7] generics_0.1.2       htmltools_0.5.2      yaml_2.3.5          
+[10] utf8_1.2.2           rlang_1.1.2          jquerylib_0.1.4     
+[13] later_1.3.0          pillar_1.9.0         glue_1.6.2          
+[16] withr_2.5.0          lambda.r_1.2.4       lifecycle_1.0.4     
+[19] stringr_1.5.1        munsell_0.5.0        gtable_0.3.0        
+[22] workflowr_1.7.0      htmlwidgets_1.5.4    evaluate_0.15       
+[25] labeling_0.4.2       knitr_1.39           fastmap_1.1.0       
+[28] crosstalk_1.2.0      httpuv_1.6.5         fansi_1.0.3         
+[31] highr_0.9            Rcpp_1.0.12          DT_0.22             
+[34] promises_1.2.0.1     scales_1.3.0         formatR_1.12        
+[37] jsonlite_1.8.0       farver_2.1.0         fs_1.5.2            
+[40] digest_0.6.29        stringi_1.7.6        rprojroot_2.0.3     
+[43] cli_3.6.1            tools_4.2.0          magrittr_2.0.3      
+[46] sass_0.4.1           tibble_3.2.1         futile.options_1.0.1
+[49] whisker_0.4          pkgconfig_2.0.3      rmarkdown_2.25      
+[52] rstudioapi_0.13      R6_2.5.1             git2r_0.30.1        
+[55] compiler_4.2.0      </code></pre>
 </div>
 </div>
 

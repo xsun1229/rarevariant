@@ -15,6 +15,7 @@ library(ggrepel)
 library(data.table)
 library(tidyr)
 library(gridExtra)
+library(VennDiagram)
 
 mirage_res <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_misupdated.RDS")
 
@@ -68,7 +69,7 @@ More details for annotaion, see https://xsun1229.github.io/rarevariant/variant_a
 
 # Overview of MIRAGE input
 
-```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}
+```{r fig.height=4, fig.width=4 , warning=F, message=FALSE}
 
 input <- fread("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt")
 print("Old mirage input:")
@@ -84,6 +85,85 @@ new_mirage <- table(mirage_input_mis_updated$group.index)[c("1","2","3","4","5",
 names(new_mirage) <- cat
 sprintf("Number of rare-variants = %s",nrow(mirage_input_mis_updated))
 print(new_mirage)
+
+
+highmpc <- input[input$group.index == 4,]
+medmpc <- input[input$group.index == 5,]
+lowmpc <- input[input$group.index == 6,]
+
+lp <- mirage_input_mis_updated[mirage_input_mis_updated$group.index == 4,]
+ab <- mirage_input_mis_updated[mirage_input_mis_updated$group.index == 5,]
+lb <- mirage_input_mis_updated[mirage_input_mis_updated$group.index == 6,]
+
+overlap_highlp <- sum(highmpc$Variant %in% lp$Variant)
+overlap_medab <- sum(medmpc$Variant %in% ab$Variant)
+overlap_lowlb <- sum(lowmpc$Variant %in% lb$Variant)
+
+
+grid.newpage()
+venn.plot <- draw.pairwise.venn(
+  area1 = nrow(highmpc),         # size of A
+  area2 = nrow(lp),         # size of B
+  cross.area = overlap_highlp,   # size of overlap A ∩ B
+  category = c("highmpc", "likely_pathogenic"),
+  fill = c("skyblue", "pink1"),
+  alpha = 0.5,
+  cex = 2,
+  cat.cex = 2,
+  cat.pos = c(-20, 20)
+)
+
+
+```
+
+```{r fig.height=4, fig.width=4 , warning=F, message=FALSE}
+
+grid.newpage()
+venn.plot <- draw.pairwise.venn(
+  area1 = nrow(medmpc),         # size of A
+  area2 = nrow(ab),         # size of B
+  cross.area = overlap_medab,   # size of overlap A ∩ B
+  category = c("medmpc", "ambiguous "),
+  fill = c("skyblue", "pink1"),
+  alpha = 0.5,
+  cex = 2,
+  cat.cex = 2,
+  cat.pos = c(-20, 20)
+)
+
+```
+
+```{r fig.height=4, fig.width=4 , warning=F, message=FALSE}
+grid.newpage()
+
+venn.plot <- draw.pairwise.venn(
+  area1 = nrow(lowmpc),         # size of A
+  area2 = nrow(lb),         # size of B
+  cross.area = overlap_lowlb,   # size of overlap A ∩ B
+  category = c("lowmpc", "likely_benign"),
+  fill = c("skyblue", "pink1"),
+  alpha = 0.5,
+  cex = 2,
+  cat.cex = 2,
+  cat.pos = c(-20, 20)
+)
+
+
+# venn.plot <- draw.pairwise.venn(
+#   area1 = nrow(highmpc),         # size of A
+#   area2 = nrow(lb),         # size of B
+#   cross.area = overlap_highlp,   # size of overlap A ∩ B
+#   category = c("highmpc", "likely_benign"),
+#   fill = c("skyblue", "pink1"),
+#   alpha = 0.5,
+#   cex = 2,
+#   cat.cex = 2,
+#   cat.pos = c(-20, 20)
+# )
+# 
+# # To plot in RStudio Viewer
+# grid.newpage()
+# grid.draw(venn.plot)
 ```
 
 
