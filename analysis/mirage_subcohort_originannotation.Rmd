@@ -130,21 +130,21 @@ sub‐sample the Autism Sequencing Consortium data into distinct cohorts (e.g. A
 ```{r fig.height=3, fig.width=7 , warning=F, message=FALSE}
 
 print("Input for all")
-mirage_input_all <- read.table("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt")
+mirage_input_all <- read.table("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt",header = T)
 new_mirage <- table(mirage_input_all$group.index)[c("1","2","3","4","5","6")]
 names(new_mirage) <- cat
 sprintf("Number of rare-variants = %s",nrow(mirage_input_all))
 print(new_mirage)
 
 print("Input for ASC")
-mirage_input_asc <-  read.table("/project/xinhe/xsun/rare_variants/5.revision/data/ASC/mirage_input.txt")
+mirage_input_asc <-  read.table("/project/xinhe/xsun/rare_variants/5.revision/data/ASC/mirage_input.txt",header = T)
 new_mirage <- table(mirage_input_asc$group.index)[c("1","2","3","4","5","6")]
 names(new_mirage) <- cat
 sprintf("Number of rare-variants = %s",nrow(mirage_input_asc))
 print(new_mirage)
 
 print("Input for SPARK")
-mirage_input_spark <- read.table("/project/xinhe/xsun/rare_variants/5.revision/data/SPARK/mirage_input.txt")
+mirage_input_spark <- read.table("/project/xinhe/xsun/rare_variants/5.revision/data/SPARK/mirage_input.txt",header = T)
 new_mirage <- table(mirage_input_spark$group.index)[c("1","2","3","4","5","6")]
 names(new_mirage) <- cat
 sprintf("Number of rare-variants = %s",nrow(mirage_input_spark))
@@ -178,7 +178,7 @@ pval_all <- c(6.27443545252015e-05, 0.00717339131657623,0.0111348018747769,0.000
 
 
 
-```{r fig.height=3, fig.width=7 , warning=F, message=FALSE}
+```{r fig.height=4, fig.width=7 , warning=F, message=FALSE}
 n <- length(cat)
 
 df_long <- data.frame(
@@ -210,14 +210,14 @@ p <- ggplot(df_long, aes(x = cat, y = est, fill = legend)) +
   geom_text(
     aes(label = ifelse(pval < 0.05, "*", ""), group = source),
     position = position_dodge(width = 0.8),
-    vjust = -0.6, size = 6
+    vjust = 0.1, size = 6
   ) +
 
   # Add source labels inside the bars
   geom_text(
     aes(label = source, group = source),
     position = position_dodge(width = 0.8),
-    vjust = 1.5, size = 3, color = "black"
+    vjust = 1.3, size = 3, color = "black"
   ) +
 
   # Add explanation for asterisk
@@ -234,6 +234,7 @@ p <- ggplot(df_long, aes(x = cat, y = est, fill = legend)) +
   ) +
   scale_y_continuous(breaks = seq(0, 1, 0.2), expand = expansion(mult = c(0, 0.1))) +
   scale_fill_manual(values = c("LoF" = "orange", "Missense" = "steelblue"))
+
 
 # Print plot
 print(p)
