@@ -12,6 +12,8 @@ output:
 
 https://pubmed.ncbi.nlm.nih.gov/31981491/ This paper published several data sets we can use. The gene sets are gtex tissue specific genes, prenatal vs. postnatal gene sets.
 
+Some gene sets were downloaded here https://github.com/BreenMS/Rapid-gene-set-enrichment
+
 
 ```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
 

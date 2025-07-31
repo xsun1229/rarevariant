@@ -448,10 +448,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -544,15 +544,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree24b62baef79ec7f4c4667f3b8c71c027c1acab62targetblank24b62baa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree7fb7309c79e4a9da9fc48af32ee868c86a7b84bdtargetblank7fb7309a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/xsun1229/rarevariant/tree/24b62baef79ec7f4c4667f3b8c71c027c1acab62" target="_blank">24b62ba</a>
+<a href="https://github.com/xsun1229/rarevariant/tree/7fb7309c79e4a9da9fc48af32ee868c86a7b84bd" target="_blank">7fb7309</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree24b62baef79ec7f4c4667f3b8c71c027c1acab62targetblank24b62baa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree7fb7309c79e4a9da9fc48af32ee868c86a7b84bdtargetblank7fb7309a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -562,7 +562,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/xsun1229/rarevariant/tree/24b62baef79ec7f4c4667f3b8c71c027c1acab62" target="_blank">24b62ba</a>.
+<a href="https://github.com/xsun1229/rarevariant/tree/7fb7309c79e4a9da9fc48af32ee868c86a7b84bd" target="_blank">7fb7309</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -576,17 +576,9 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Untracked files:
-    Untracked:  analysis/mirage_origin.Rmd
-
 Unstaged changes:
-    Deleted:    VennDiagram.2025-07-07_14-59-56.log
-    Deleted:    VennDiagram.2025-07-07_15-29-29.log
-    Deleted:    VennDiagram.2025-07-09_10-44-48.log
-    Deleted:    VennDiagram.2025-07-09_10-45-48.log
-    Deleted:    VennDiagram.2025-07-09_11-02-07.log
-    Modified:   analysis/index.Rmd
     Modified:   analysis/mirage_mis.Rmd
+    Modified:   analysis/mirage_origin.Rmd
 
 </code></pre>
 <p>
@@ -601,10 +593,74 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/mirage_origin.Rmd</code>) and
+HTML (<code>docs/mirage_origin.html</code>) files. If you’ve configured
+a remote Git repository (see <code>?wflow_git_remote</code>), click on
+the hyperlinks in the table below to view the files as they were in that
+past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/ad9a90ad0e199efc9978328a15a741c484e33f1e/analysis/mirage_origin.Rmd" target="_blank">ad9a90a</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-31
+</td>
+<td>
+update
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/xsun1229/rarevariant/ad9a90ad0e199efc9978328a15a741c484e33f1e/docs/mirage_origin.html" target="_blank">ad9a90a</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-31
+</td>
+<td>
+update
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -615,6 +671,9 @@ There are no past versions. Publish this analysis with
 class="uri">https://pubmed.ncbi.nlm.nih.gov/31981491/</a> This paper
 published several data sets we can use. The gene sets are gtex tissue
 specific genes, prenatal vs. postnatal gene sets.</p>
+<p>Some gene sets were downloaded here <a
+href="https://github.com/BreenMS/Rapid-gene-set-enrichment"
+class="uri">https://github.com/BreenMS/Rapid-gene-set-enrichment</a></p>
 <pre class="r"><code>gene_pp_bf_posadded_origin &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_origin.RDS&quot;)
 
 get_fisher_enrichment &lt;- function(category_genes, category_name) {
@@ -808,8 +867,8 @@ loaded via a namespace (and not attached):
 [25] knitr_1.39        fs_1.5.2          vctrs_0.6.5       sass_0.4.1       
 [29] htmlwidgets_1.5.4 rprojroot_2.0.3   DT_0.22           glue_1.6.2       
 [33] R6_2.5.1          fansi_1.0.3       readxl_1.4.0      rmarkdown_2.25   
-[37] magrittr_2.0.3    promises_1.2.0.1  htmltools_0.5.2   httpuv_1.6.5     
-[41] utf8_1.2.2        stringi_1.7.6    </code></pre>
+[37] magrittr_2.0.3    whisker_0.4       promises_1.2.0.1  htmltools_0.5.2  
+[41] httpuv_1.6.5      utf8_1.2.2        stringi_1.7.6    </code></pre>
 </div>
 </div>
 </div>
