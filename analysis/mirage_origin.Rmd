@@ -1,0 +1,132 @@
+---
+title: "Validation for initial submission"
+author: "XSun"
+date: "2025-07-31"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+---
+
+## Enrichment in other gene sets
+
+https://pubmed.ncbi.nlm.nih.gov/31981491/ This paper published several data sets we can use. The gene sets are gtex tissue specific genes, prenatal vs. postnatal gene sets.
+
+
+```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
+
+gene_pp_bf_posadded_origin <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_origin.RDS")
+
+get_fisher_enrichment <- function(category_genes, category_name) {
+  # Restrict all sets to background to be consistent
+  bg <- background_genes
+  highpip <- intersect(highpip_genes, bg)
+  category <- intersect(category_genes, bg)
+  
+  # Counts for contingency table
+  a <- sum(highpip %in% category)              # HighPIP & In Category
+  b <- sum(highpip %notin% category)           # HighPIP & Not in Category
+  c <- sum((bg %notin% highpip) & (bg %in% category))  # Not HighPIP & In Category
+  d <- sum((bg %notin% highpip) & (bg %notin% category)) # Not HighPIP & Not in Category
+  
+  contingency_table <- matrix(c(a, b, c, d), nrow = 2,
+                              dimnames = list(
+                                HighPIP = c("Yes", "No"),
+                                InCategory = c("Yes", "No")
+                              ))
+  
+  fisher_result <- fisher.test(contingency_table, alternative = "greater")
+  
+  cat("\n", category_name, "\n")
+  print(contingency_table)
+  print(fisher_result)
+}
+
+```
+
+### GTEx brain tissue specific genes
+
+We did Fisher exact test to check if the genes with PP>0.5 are enriched in the tissue-specific gene sets. 
+
+```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
+
+merged_df <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/validation_gtex_brain_origin.RDS")
+
+DT::datatable(merged_df,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;',' Brain tissue upregulated genes and overlap with MIRAGE genes'),options = list(pageLength = 10) )
+
+merged_df <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/validation_gtex_nonbrain_origin.RDS")
+
+
+DT::datatable(merged_df,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;',' non-Brain tissue upregulated genes and overlap with MIRAGE genes'),options = list(pageLength = 10) )
+
+```
+
+### prenatal, postnatal, unbiased gene sets
+
+We did Fisher exact test to check if the genes with PP>0.5 are enriched in the prenatal/postnatal/unbiased gene sets. 
+
+```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
+
+braineffect <-  readxl::read_excel("/project/xinhe/xsun/rare_variants/5.revision/data/brain_de/BrainSpan_FetalEffect.xlsx")
+
+prenatal <- braineffect[braineffect$FetalEffect == "Prenatal",]
+unbiased <- braineffect[braineffect$FetalEffect == "Unbiased",]
+postnatal <- braineffect[braineffect$FetalEffect == "Postnatal",]
+
+print(paste0("Prenatal gene number =", nrow(prenatal)))
+print(paste0("Postnatal gene number =", nrow(postnatal)))
+print(paste0("Unbiased gene number =", nrow(unbiased)))
+
+print("Genes with PP > 0.5")
+highpip <- gene_pp_bf_posadded_origin[gene_pp_bf_posadded_origin$PP > 0.5,]
+
+# Define sets
+highpip_genes <- highpip$Gene
+prenatal_genes <- prenatal$GeneSymbol
+postnatal_genes <- postnatal$GeneSymbol
+unbiased_genes <- unbiased$GeneSymbol
+
+background_genes <- gene_pp_bf_posadded_origin$Gene
+
+
+# Define `%notin%` for convenience
+`%notin%` <- Negate(`%in%`)
+
+print("Prenatal")
+print(highpip$Gene[highpip$Gene %in% prenatal$GeneSymbol])
+get_fisher_enrichment(prenatal_genes, "Prenatal")
+
+print("Postnatal")
+print(highpip$Gene[highpip$Gene %in% postnatal$GeneSymbol])
+get_fisher_enrichment(postnatal_genes, "Postnatal")
+
+print("Unbiased")
+print(highpip$Gene[highpip$Gene %in% unbiased$GeneSymbol])
+get_fisher_enrichment(unbiased_genes, "Unbiased")
+
+
+```
+
+
+
+
+### Single cell expression data, 
+
+To assess whether the ASD genes are enriched in specific cell types (clusters), we used a background set of 7,867 genes expressed in the experiment. For each cell type, they built a 2×2 table comparing the number of ASD genes expressed versus not expressed, and the number of non-ASD genes expressed versus not expressed. Enrichment was evaluated using odds ratios and Fisher’s exact test.
+
+Within each cell type cluster, a gene was considered expressed if one or more of its transcripts were detected in 25% or more cells
+
+```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
+
+fisher_res <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/validation_scrna_fet_origin.RDS")
+
+DT::datatable(fisher_res,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Fisher results for the ASD genes'),options = list(pageLength = 10) )
+
+cluster_member <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/validation_scrna_expr_binary_origin.RDS")
+
+DT::datatable(cluster_member,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Cluster membership for the ASD genes'),options = list(pageLength = 10) )
+
+```
+
+
+

@@ -21,3 +21,5 @@ Not used
 [MIRAGE results -- lof & missense annotation updated](mirage_lofmis.html)
 
 [MIRAGE results -- lof & missense annotation updated -- lof use decile](mirage_lofdecmis.html)
+
+[Additional validataion for initial submission](mirage_origin.html)

@@ -411,7 +411,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2025-07-09
+<strong>Last updated:</strong> 2025-07-30
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -545,15 +545,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree8bf2f9f0b6fe0390317c19bf7b587f2b8ee2fb5ftargetblank8bf2f9fa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree24b62baef79ec7f4c4667f3b8c71c027c1acab62targetblank24b62baa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/xsun1229/rarevariant/tree/8bf2f9f0b6fe0390317c19bf7b587f2b8ee2fb5f" target="_blank">8bf2f9f</a>
+<a href="https://github.com/xsun1229/rarevariant/tree/24b62baef79ec7f4c4667f3b8c71c027c1acab62" target="_blank">24b62ba</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree8bf2f9f0b6fe0390317c19bf7b587f2b8ee2fb5ftargetblank8bf2f9fa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree24b62baef79ec7f4c4667f3b8c71c027c1acab62targetblank24b62baa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -563,7 +563,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/xsun1229/rarevariant/tree/8bf2f9f0b6fe0390317c19bf7b587f2b8ee2fb5f" target="_blank">8bf2f9f</a>.
+<a href="https://github.com/xsun1229/rarevariant/tree/24b62baef79ec7f4c4667f3b8c71c027c1acab62" target="_blank">24b62ba</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -578,6 +578,11 @@ were generated:
 </p>
 <pre><code>
 Unstaged changes:
+    Deleted:    VennDiagram.2025-07-07_14-59-56.log
+    Deleted:    VennDiagram.2025-07-07_15-29-29.log
+    Deleted:    VennDiagram.2025-07-09_10-44-48.log
+    Deleted:    VennDiagram.2025-07-09_10-45-48.log
+    Deleted:    VennDiagram.2025-07-09_11-02-07.log
     Modified:   analysis/mirage_mis.Rmd
 
 </code></pre>
@@ -624,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/24b62baef79ec7f4c4667f3b8c71c027c1acab62/analysis/mirage_mis.Rmd" target="_blank">24b62ba</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-09
+</td>
+<td>
+update
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/xsun1229/rarevariant/24b62baef79ec7f4c4667f3b8c71c027c1acab62/docs/mirage_mis.html" target="_blank">24b62ba</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-09
+</td>
+<td>
+update
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -859,12 +898,39 @@ library(data.table)
 library(tidyr)
 library(gridExtra)
 library(VennDiagram)
+library(tidyverse)
 
 mirage_res &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_misupdated.RDS&quot;)
 
 #cat &lt;- c(&quot;high LOEUF oe&quot;, &quot;med LOEUF oe&quot;, &quot;low LOEUF oe&quot;, &quot;likely pathogenic&quot;, &quot;ambiguous&quot;, &quot;likely benign&quot;)
 cat &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;likely pathogenic&quot;, &quot;ambiguous&quot;, &quot;likely benign&quot;)
-cat_old &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;highMPC&quot;, &quot;medMPC&quot;, &quot;lowMPC&quot;)</code></pre>
+cat_old &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;highMPC&quot;, &quot;medMPC&quot;, &quot;lowMPC&quot;)
+
+# Function to test enrichment with Fisher&#39;s exact test
+get_fisher_enrichment &lt;- function(category_genes, category_name) {
+  # Restrict all sets to background to be consistent
+  bg &lt;- background_genes
+  highpip &lt;- intersect(highpip_genes, bg)
+  category &lt;- intersect(category_genes, bg)
+  
+  # Counts for contingency table
+  a &lt;- sum(highpip %in% category)              # HighPIP &amp; In Category
+  b &lt;- sum(highpip %notin% category)           # HighPIP &amp; Not in Category
+  c &lt;- sum((bg %notin% highpip) &amp; (bg %in% category))  # Not HighPIP &amp; In Category
+  d &lt;- sum((bg %notin% highpip) &amp; (bg %notin% category)) # Not HighPIP &amp; Not in Category
+  
+  contingency_table &lt;- matrix(c(a, b, c, d), nrow = 2,
+                              dimnames = list(
+                                HighPIP = c(&quot;Yes&quot;, &quot;No&quot;),
+                                InCategory = c(&quot;Yes&quot;, &quot;No&quot;)
+                              ))
+  
+  fisher_result &lt;- fisher.test(contingency_table, alternative = &quot;greater&quot;)
+  
+  cat(&quot;\n&quot;, category_name, &quot;\n&quot;)
+  print(contingency_table)
+  print(fisher_result)
+}</code></pre>
 <p>We are addressing the reviews’ comments:</p>
 <pre><code>R1:
 3)    More rigorous prediction scores (i.e., REVEL, Alpha-missense) can be included for the stratification of missense variants.
@@ -977,6 +1043,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/xsun1229/rarevariant/blob/24b62baef79ec7f4c4667f3b8c71c027c1acab62/docs/figure/mirage_mis.Rmd/unnamed-chunk-2-1.png" target="_blank">24b62ba</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_mis.Rmd/unnamed-chunk-2-1.png" target="_blank">35b59e7</a>
 </td>
 <td>
@@ -1025,6 +1102,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/24b62baef79ec7f4c4667f3b8c71c027c1acab62/docs/figure/mirage_mis.Rmd/unnamed-chunk-3-1.png" target="_blank">24b62ba</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-09
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/xsun1229/rarevariant/blob/0b8457e1a486048bb2c854a462b9de77848c4c4d/docs/figure/mirage_mis.Rmd/unnamed-chunk-3-1.png" target="_blank">0b8457e</a>
@@ -1087,6 +1175,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/24b62baef79ec7f4c4667f3b8c71c027c1acab62/docs/figure/mirage_mis.Rmd/unnamed-chunk-4-1.png" target="_blank">24b62ba</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-09
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/xsun1229/rarevariant/blob/35b59e77f7baf6b91041b1614eafb0dcc2bebb69/docs/figure/mirage_mis.Rmd/unnamed-chunk-4-1.png" target="_blank">35b59e7</a>
@@ -1176,6 +1275,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/24b62baef79ec7f4c4667f3b8c71c027c1acab62/docs/figure/mirage_mis.Rmd/unnamed-chunk-5-1.png" target="_blank">24b62ba</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-09
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/xsun1229/rarevariant/blob/0b8457e1a486048bb2c854a462b9de77848c4c4d/docs/figure/mirage_mis.Rmd/unnamed-chunk-5-1.png" target="_blank">0b8457e</a>
@@ -1296,6 +1406,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/24b62baef79ec7f4c4667f3b8c71c027c1acab62/docs/figure/mirage_mis.Rmd/unnamed-chunk-7-1.png" target="_blank">24b62ba</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-09
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/xsun1229/rarevariant/blob/a260379d205b4fbc38ee79f88c7a67a90487855a/docs/figure/mirage_mis.Rmd/unnamed-chunk-7-1.png" target="_blank">a260379</a>
@@ -1427,6 +1548,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/xsun1229/rarevariant/blob/24b62baef79ec7f4c4667f3b8c71c027c1acab62/docs/figure/mirage_mis.Rmd/unnamed-chunk-8-1.png" target="_blank">24b62ba</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/xsun1229/rarevariant/blob/0b8457e1a486048bb2c854a462b9de77848c4c4d/docs/figure/mirage_mis.Rmd/unnamed-chunk-8-1.png" target="_blank">0b8457e</a>
 </td>
 <td>
@@ -1529,6 +1661,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/xsun1229/rarevariant/blob/24b62baef79ec7f4c4667f3b8c71c027c1acab62/docs/figure/mirage_mis.Rmd/unnamed-chunk-9-1.png" target="_blank">24b62ba</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-07-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/xsun1229/rarevariant/blob/0b8457e1a486048bb2c854a462b9de77848c4c4d/docs/figure/mirage_mis.Rmd/unnamed-chunk-9-1.png" target="_blank">0b8457e</a>
 </td>
 <td>
@@ -1541,6 +1684,151 @@ XSun
 </tbody>
 </table>
 </div>
+</div>
+</div>
+<div id="enrichment-in-other-gene-sets" class="section level2">
+<h2>Enrichment in other gene sets</h2>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/31981491/"
+class="uri">https://pubmed.ncbi.nlm.nih.gov/31981491/</a> This paper
+published several data sets we can use. The gene sets are gtex tissue
+specific genes, prenatal vs. postnatal gene sets.</p>
+<pre class="r"><code>gene_pp_bf_posadded_misupdated &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_misupdated.RDS&quot;)</code></pre>
+<div id="gtex-brain-tissue-specific-genes" class="section level3">
+<h3>GTEx brain tissue specific genes</h3>
+<p>We did Fisher exact test to check if the genes with PP&gt;0.5 are
+enriched in the tissue-specific gene sets.</p>
+<pre class="r"><code>merged_df &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/validation_gtex_brain_misupdated.RDS&quot;)
+
+DT::datatable(merged_df,caption = htmltools::tags$caption( style = &#39;caption-side: left; text-align: left; color:black;  font-size:150% ;&#39;,&#39; Brain tissue upregulated genes and overlap with MIRAGE genes&#39;),options = list(pageLength = 10) )</code></pre>
+<div id="htmlwidget-48defda8782ef968da74" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-48defda8782ef968da74">{"x":{"filter":"none","vertical":false,"caption":"<caption style=\"caption-side: left; text-align: left; color:black;  font-size:150% ;\"> Brain tissue upregulated genes and overlap with MIRAGE genes<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["Brain_Amygdala.up_1996","Brain_Anterior_cingulate_cortex_BA24.up_2523","Brain_Caudate_basal_ganglia.up_2327","Brain_Cerebellar_Hemisphere.up_6857","Brain_Cerebellum.up_6616","Brain_Cortex.up_2969","Brain_Frontal_Cortex_BA9.up_3421","Brain_Hippocampus.up_2170","Brain_Hypothalamus.up_2782","Brain_Nucleus_accumbens_basal_ganglia.up_2754","Brain_Putamen_basal_ganglia.up_1867","Brain_Substantia_nigra.up_1907"],["SV2B","LINGO2,SV2B","ARAP2","PCYOX1L,MYH10,KATNAL1,LMNB1,USP31,PDS5B,SV2B","PCYOX1L,MYH10,LMNB1,SLC5A6,PAN2,SV2B","LINGO2,SV2B","ARAP2,PCYOX1L,LINGO2,MYH10,SV2B","SV2B","LINGO2","ARAP2,SV2B","ARAP2","SV2B"],[0.96327652970679,0.91689110751821,0.979429658164467,0.948958256622832,0.9730995621816,0.95701330752548,0.619804993977857,0.972993113993618,0.9909225693717,0.940764890190219,0.953571863304929,0.956972722418383]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tissue<\/th>\n      <th>mirage_gene_overlap<\/th>\n      <th>enrich_p<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"columnDefs":[{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>merged_df &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/validation_gtex_nonbrain_misupdated.RDS&quot;)
+
+
+DT::datatable(merged_df,caption = htmltools::tags$caption( style = &#39;caption-side: left; text-align: left; color:black;  font-size:150% ;&#39;,&#39; non-Brain tissue upregulated genes and overlap with MIRAGE genes&#39;),options = list(pageLength = 10) )</code></pre>
+<div id="htmlwidget-8162b872ed07ea29f25d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8162b872ed07ea29f25d">{"x":{"filter":"none","vertical":false,"caption":"<caption style=\"caption-side: left; text-align: left; color:black;  font-size:150% ;\"> non-Brain tissue upregulated genes and overlap with MIRAGE genes<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39"],["Adipose_Subcutaneous.up_2148","Adipose_Visceral_Omentum.up_1828","Adrenal_Gland.up_1656","Artery_Aorta.up_2673","Artery_Coronary.up_2000","Artery_Tibial.up_2567","Bladder.up_608","Breast_Mammary_Tissue.up_2059","Cells_Transformed_fibroblasts.up_4268","Cervix_Ectocervix.up_60","Cervix_Endocervix.up_363","Colon_Sigmoid.up_1649","Colon_Transverse.up_1715","Esophagus_Gastroesophageal_Junction.up_1329","Esophagus_Mucosa.up_2327","Esophagus_Muscularis.up_1312","Fallopian_Tube.up_227","Heart_Atrial_Appendage.up_766","Heart_Left_Ventricle.up_568","Kidney_Cortex.up_1347","Liver.up_1568","Lung.up_4357","Minor_Salivary_Gland.up_1922","Muscle_Skeletal.up_1141","Nerve_Tibial.up_5558","Ovary.up_5788","Pancreas.up_808","Pituitary.up_5270","Prostate.up_3415","Skin_Not_Sun_Exposed_Suprapubic.up_2690","Skin_Sun_Exposed_Lower_leg.up_2799","Small_Intestine_Terminal_Ileum.up_2823","Spleen.up_4843","Stomach.up_1164","Testis.up_12646","Thyroid.up_5868","Uterus.up_5588","Vagina.up_2791","Whole_Blood.up_2262"],["","SLC5A6,PTPRE","PTPRE","MYH10,OXER1","MYH10","MYH10,KATNAL1","PTPRF","PTPRF,SLC5A6","MYH10,KATNAL1,LMNB1,OSBPL3","","","KATNAL1","PTPRF,LMNB1","KATNAL1","ARAP2,PTPRF,LMNB1,OSBPL3","KATNAL1","MYH10","","","OXER1,OSBPL3","OXER1,SLC5A6","ARAP2,MYH10,LMNB1,PTPRE,OSBPL3","PTPRF","","PTPRF,PCYOX1L,KATNAL1,PDS5B,PTPRE,PAN2","PRTG,PCYOX1L,MYH10,OXER1,PDS5B","","PCYOX1L,MYH10","PTPRF,USP31,OXER1","ARAP2,PTPRF,USP31,OSBPL3","ARAP2,PTPRF,OSBPL3","LMNB1,OXER1,OSBPL3","LMNB1,OXER1,PTPRE,OSBPL3","","PRTG,PCYOX1L,LINGO2,KATNAL1,LMNB1,USP31,SLC5A6,PAN2","ARAP2,PRTG,LINGO2,PAN2,OSBPL3","PRTG,PTPRF,LINGO2,MYH10,KATNAL1,USP31,OXER1,SLC5A6,PDS5B","PTPRF,USP31,OXER1,OSBPL3","LMNB1,OXER1,PTPRE"],[1,0.786638525955591,0.932348713463661,0.934303307947746,0.963544039492605,0.925544719192695,0.620661778822952,0.842249960081446,0.931072894723905,1,1,0.9310136057663,0.751566522071966,0.879309202070779,0.490003866504211,0.87677681529811,0.297785826962672,1,1,0.626931876003035,0.710254793133373,0.837420173528215,0.957050721767987,1,0.903651538381776,0.972263475856155,1,0.999300154326625,0.917867474758232,0.604424332969276,0.829279752579688,0.829691459025083,0.962815488684756,1,0.999999998183874,0.975169390439575,0.491845810034192,0.63911124322519,0.686802720081613]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tissue<\/th>\n      <th>mirage_gene_overlap<\/th>\n      <th>enrich_p<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"columnDefs":[{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="prenatal-postnatal-unbiased-gene-sets" class="section level3">
+<h3>prenatal, postnatal, unbiased gene sets</h3>
+<p>We did Fisher exact test to check if the genes with PP&gt;0.5 are
+enriched in the prenatal/postnatal/unbiased gene sets.</p>
+<pre class="r"><code>braineffect &lt;-  readxl::read_excel(&quot;/project/xinhe/xsun/rare_variants/5.revision/data/brain_de/BrainSpan_FetalEffect.xlsx&quot;)
+
+prenatal &lt;- braineffect[braineffect$FetalEffect == &quot;Prenatal&quot;,]
+unbiased &lt;- braineffect[braineffect$FetalEffect == &quot;Unbiased&quot;,]
+postnatal &lt;- braineffect[braineffect$FetalEffect == &quot;Postnatal&quot;,]
+
+print(paste0(&quot;Prenatal gene number =&quot;, nrow(prenatal)))</code></pre>
+<pre><code>[1] &quot;Prenatal gene number =8696&quot;</code></pre>
+<pre class="r"><code>print(paste0(&quot;Postnatal gene number =&quot;, nrow(postnatal)))</code></pre>
+<pre><code>[1] &quot;Postnatal gene number =7203&quot;</code></pre>
+<pre class="r"><code>print(paste0(&quot;Unbiased gene number =&quot;, nrow(unbiased)))</code></pre>
+<pre><code>[1] &quot;Unbiased gene number =10596&quot;</code></pre>
+<pre class="r"><code>print(&quot;Genes with PP &gt; 0.5&quot;)</code></pre>
+<pre><code>[1] &quot;Genes with PP &gt; 0.5&quot;</code></pre>
+<pre class="r"><code>highpip &lt;- gene_pp_bf_posadded_misupdated[gene_pp_bf_posadded_misupdated$PP &gt; 0.5,]
+
+# Define sets
+highpip_genes &lt;- highpip$Gene
+prenatal_genes &lt;- prenatal$GeneSymbol
+postnatal_genes &lt;- postnatal$GeneSymbol
+unbiased_genes &lt;- unbiased$GeneSymbol
+
+background_genes &lt;- gene_pp_bf_posadded_misupdated$Gene
+
+
+# Define `%notin%` for convenience
+`%notin%` &lt;- Negate(`%in%`)
+
+print(&quot;Prenatal&quot;)</code></pre>
+<pre><code>[1] &quot;Prenatal&quot;</code></pre>
+<pre class="r"><code>print(highpip$Gene[highpip$Gene %in% prenatal$GeneSymbol])</code></pre>
+<pre><code>[1] &quot;PTPRF&quot;  &quot;LMNB1&quot;  &quot;MFSD10&quot; &quot;PDS5B&quot; </code></pre>
+<pre class="r"><code>get_fisher_enrichment(prenatal_genes, &quot;Prenatal&quot;)</code></pre>
+<pre><code>
+ Prenatal 
+       InCategory
+HighPIP Yes    No
+    Yes   4  4926
+    No   17 11522
+
+    Fisher&#39;s Exact Test for Count Data
+
+data:  contingency_table
+p-value = 0.9136
+alternative hypothesis: true odds ratio is greater than 1
+95 percent confidence interval:
+ 0.1700449       Inf
+sample estimates:
+odds ratio 
+ 0.5503745 </code></pre>
+<pre class="r"><code>print(&quot;Postnatal&quot;)</code></pre>
+<pre><code>[1] &quot;Postnatal&quot;</code></pre>
+<pre class="r"><code>print(highpip$Gene[highpip$Gene %in% postnatal$GeneSymbol])</code></pre>
+<pre><code>[1] &quot;ARAP2&quot;   &quot;PCYOX1L&quot; &quot;AHNAK&quot;   &quot;PTPRE&quot;   &quot;OSBPL3&quot;  &quot;SV2B&quot;   </code></pre>
+<pre class="r"><code>get_fisher_enrichment(postnatal_genes, &quot;Postnatal&quot;)</code></pre>
+<pre><code>
+ Postnatal 
+       InCategory
+HighPIP Yes    No
+    Yes   6  4434
+    No   15 12014
+
+    Fisher&#39;s Exact Test for Count Data
+
+data:  contingency_table
+p-value = 0.5162
+alternative hypothesis: true odds ratio is greater than 1
+95 percent confidence interval:
+ 0.4134107       Inf
+sample estimates:
+odds ratio 
+   1.08381 </code></pre>
+<pre class="r"><code>print(&quot;Unbiased&quot;)</code></pre>
+<pre><code>[1] &quot;Unbiased&quot;</code></pre>
+<pre class="r"><code>print(highpip$Gene[highpip$Gene %in% unbiased$GeneSymbol])</code></pre>
+<pre><code>[1] &quot;LINGO2&quot;  &quot;MYH10&quot;   &quot;KATNAL1&quot; &quot;USP31&quot;   &quot;OXER1&quot;   &quot;SLC5A6&quot;  &quot;DYNC1H1&quot;
+[8] &quot;PAN2&quot;   </code></pre>
+<pre class="r"><code>get_fisher_enrichment(unbiased_genes, &quot;Unbiased&quot;)</code></pre>
+<pre><code>
+ Unbiased 
+       InCategory
+HighPIP Yes    No
+    Yes   8  3750
+    No   13 12698
+
+    Fisher&#39;s Exact Test for Count Data
+
+data:  contingency_table
+p-value = 0.08431
+alternative hypothesis: true odds ratio is greater than 1
+95 percent confidence interval:
+ 0.8765016       Inf
+sample estimates:
+odds ratio 
+  2.083726 </code></pre>
+</div>
+<div id="single-cell-expression-data" class="section level3">
+<h3>Single cell expression data,</h3>
+<p>To assess whether the ASD genes are enriched in specific cell types
+(clusters), we used a background set of 7,867 genes expressed in the
+experiment. For each cell type, they built a 2×2 table comparing the
+number of ASD genes expressed versus not expressed, and the number of
+non-ASD genes expressed versus not expressed. Enrichment was evaluated
+using odds ratios and Fisher’s exact test.</p>
+<p>Within each cell type cluster, a gene was considered expressed if one
+or more of its transcripts were detected in 25% or more cells</p>
+<pre class="r"><code>fisher_res &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/validation_scrna_fet_misupdated.RDS&quot;)
+
+DT::datatable(fisher_res,caption = htmltools::tags$caption( style = &#39;caption-side: left; text-align: left; color:black;  font-size:150% ;&#39;,&#39;Fisher results for the ASD genes&#39;),options = list(pageLength = 10) )</code></pre>
+<div id="htmlwidget-ce92b5a4e78853dbdd81" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ce92b5a4e78853dbdd81">{"x":{"filter":"none","vertical":false,"caption":"<caption style=\"caption-side: left; text-align: left; color:black;  font-size:150% ;\">Fisher results for the ASD genes<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"],["C1-Striatal Interneurons","C2-Early + Late Excitation Neurons (V1 enriched)","C3-Early Excitatory Neurons","C4-Astrocytes and OPCs","C6-MGE derived cortical interneurons","C7-Dividing Intermediate Progenitor Cells (IPCs)","C8-MGE IPCs","C9-Endothelial","C10-Radial Glia","C11-MGE RG","C13-Newborn Neurons","C15-CGE derived interneurons","C16-Early + Late Excitation Neurons (PFC enriched)","C17-IPCs","C18-Newborn Neurons","C19-Microglia","C20-Choroid Plexus","C23-Newborn MGE Interneurons","C25-Dividing RG"],["0.461436163318569","0.364523342232641","0.327334852449807","0.337623689064827","0.381888511300225","0.255346717723562","0.53650284768802","0.321325305046998","0.276879282075526","0.342383185084836","0.244084547634874","0.428034722278769","0.257577581608711","0.24850089080627","0.364526935049297","0.313423732469163","0.221832624882779","0.564741185848789","0.174273050065998"],["0.320296690247448","0.0271087569808872","0.013720549345572","0.0261900428947415","0.152422527601119","0.00232490543615783","0.194676606780398","0.0142690554198144","0.00496629530499796","0.0464882979123519","0.00252467028639641","0.223849097751334","0.00323506261968651","0.0143323213340711","0.0725583643293265","0.0641127318427477","0.00354395222693853","0.444035198942736","0.000110250130833799"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>cluster<\/th>\n      <th>odds ratio<\/th>\n      <th>fisher-p<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"columnDefs":[{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>cluster_member &lt;- readRDS(&quot;/project/xinhe/xsun/rare_variants/5.revision/results/validation_scrna_expr_binary_misupdated.RDS&quot;)
+
+DT::datatable(cluster_member,caption = htmltools::tags$caption( style = &#39;caption-side: left; text-align: left; color:black;  font-size:150% ;&#39;,&#39;Cluster membership for the ASD genes&#39;),options = list(pageLength = 10) )</code></pre>
+<div id="htmlwidget-bae1458cb9fae638aeff" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-bae1458cb9fae638aeff">{"x":{"filter":"none","vertical":false,"caption":"<caption style=\"caption-side: left; text-align: left; color:black;  font-size:150% ;\">Cluster membership for the ASD genes<\/caption>","data":[["ARAP2","PRTG","PTPRF","OR52A5","PCYOX1L","LINGO2","OR11H6","MYH10","KATNAL1","LMNB1","USP31","MFSD10","OXER1","AHNAK","SLC5A6","DYNC1H1","PDS5B","PTPRE","PAN2","OSBPL3","SV2B"],[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0],[0,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,1,1,0,0,0],[0,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,1,0,0,1,0],[1,0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,1,0,0,0,0],[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0],[0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0],[0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0],[1,1,0,0,0,0,0,1,0,0,1,0,0,1,1,1,1,1,0,0,0],[1,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,1,0,0,0,0],[0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0],[0,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,1,0,0,0,0],[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0],[0,0,1,0,0,0,0,1,1,0,1,0,0,0,0,1,1,0,0,0,0],[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0],[0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,1,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,1,0,0,0,0],[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0],[1,0,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,0,1,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>C1-Striatal Interneurons<\/th>\n      <th>C2-Early + Late Excitation Neurons (V1 enriched)<\/th>\n      <th>C3-Early Excitatory Neurons<\/th>\n      <th>C4-Astrocytes and OPCs<\/th>\n      <th>C6-MGE derived cortical interneurons<\/th>\n      <th>C7-Dividing Intermediate Progenitor Cells (IPCs)<\/th>\n      <th>C8-MGE IPCs<\/th>\n      <th>C9-Endothelial<\/th>\n      <th>C10-Radial Glia<\/th>\n      <th>C11-MGE RG<\/th>\n      <th>C13-Newborn Neurons<\/th>\n      <th>C15-CGE derived interneurons<\/th>\n      <th>C16-Early + Late Excitation Neurons (PFC enriched)<\/th>\n      <th>C17-IPCs<\/th>\n      <th>C18-Newborn Neurons<\/th>\n      <th>C19-Microglia<\/th>\n      <th>C20-Choroid Plexus<\/th>\n      <th>C23-Newborn MGE Interneurons<\/th>\n      <th>C25-Dividing RG<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -1561,7 +1849,7 @@ pvalues &lt;- list(&#39;Burden test (LoF)&#39; = burden_pvalues$LoF_pvalue,
 p &lt;- qqplot_multi(pvalues_list = pvalues,legend_names = c(&#39;Burden test (LoF)&#39;,&#39;Burden test (likely pathogenic &amp;LoF)&#39;,&#39;ACAT&#39;))
 
 print(p)</code></pre>
-<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-10-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-14-1.png" width="480" style="display: block; margin: auto;" /></p>
 </div>
 <div id="comparing-with-results-in-initial-submission"
 class="section level1">
@@ -1603,7 +1891,7 @@ p2 &lt;- ggplot(compare, aes(x = post_prob_old, y = post_prob_new)) +
     theme_minimal()
 
 grid.arrange(p1, p2,  ncol = 2)</code></pre>
-<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/mirage_mis.Rmd/unnamed-chunk-15-1.png" width="768" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>genes_diff &lt;- compare[!is.na(compare$label),]
 
 cat_compare &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;highMPC/likely pathogenic&quot;, &quot;medMPC/ambiguous&quot;, &quot;lowMPC/likely benign&quot;)
@@ -1763,30 +2051,37 @@ attached base packages:
 [8] base     
 
 other attached packages:
-[1] VennDiagram_1.7.3   futile.logger_1.4.3 gridExtra_2.3      
-[4] tidyr_1.3.0         data.table_1.14.2   ggrepel_0.9.1      
-[7] dplyr_1.1.4         ggplot2_3.5.1      
+ [1] forcats_0.5.1       stringr_1.5.1       purrr_1.0.2        
+ [4] readr_2.1.2         tibble_3.2.1        tidyverse_1.3.1    
+ [7] VennDiagram_1.7.3   futile.logger_1.4.3 gridExtra_2.3      
+[10] tidyr_1.3.0         data.table_1.14.2   ggrepel_0.9.1      
+[13] dplyr_1.1.4         ggplot2_3.5.1      
 
 loaded via a namespace (and not attached):
- [1] tidyselect_1.2.0     xfun_0.41            bslib_0.3.1         
- [4] purrr_1.0.2          colorspace_2.0-3     vctrs_0.6.5         
- [7] generics_0.1.2       htmltools_0.5.2      yaml_2.3.5          
-[10] utf8_1.2.2           rlang_1.1.2          jquerylib_0.1.4     
-[13] later_1.3.0          pillar_1.9.0         glue_1.6.2          
-[16] withr_2.5.0          lambda.r_1.2.4       lifecycle_1.0.4     
-[19] stringr_1.5.1        munsell_0.5.0        gtable_0.3.0        
-[22] workflowr_1.7.0      htmlwidgets_1.5.4    evaluate_0.15       
-[25] labeling_0.4.2       knitr_1.39           fastmap_1.1.0       
-[28] crosstalk_1.2.0      httpuv_1.6.5         fansi_1.0.3         
-[31] highr_0.9            Rcpp_1.0.12          DT_0.22             
-[34] promises_1.2.0.1     scales_1.3.0         formatR_1.12        
-[37] jsonlite_1.8.0       farver_2.1.0         fs_1.5.2            
-[40] digest_0.6.29        stringi_1.7.6        rprojroot_2.0.3     
-[43] cli_3.6.1            tools_4.2.0          magrittr_2.0.3      
-[46] sass_0.4.1           tibble_3.2.1         futile.options_1.0.1
-[49] whisker_0.4          pkgconfig_2.0.3      rmarkdown_2.25      
-[52] rstudioapi_0.13      R6_2.5.1             git2r_0.30.1        
-[55] compiler_4.2.0      </code></pre>
+ [1] Rcpp_1.0.12          lubridate_1.8.0      assertthat_0.2.1    
+ [4] rprojroot_2.0.3      digest_0.6.29        utf8_1.2.2          
+ [7] cellranger_1.1.0     R6_2.5.1             futile.options_1.0.1
+[10] backports_1.4.1      reprex_2.0.1         evaluate_0.15       
+[13] highr_0.9            httr_1.4.3           pillar_1.9.0        
+[16] rlang_1.1.2          readxl_1.4.0         rstudioapi_0.13     
+[19] whisker_0.4          jquerylib_0.1.4      DT_0.22             
+[22] rmarkdown_2.25       labeling_0.4.2       htmlwidgets_1.5.4   
+[25] munsell_0.5.0        broom_0.8.0          compiler_4.2.0      
+[28] httpuv_1.6.5         modelr_0.1.8         xfun_0.41           
+[31] pkgconfig_2.0.3      htmltools_0.5.2      tidyselect_1.2.0    
+[34] workflowr_1.7.0      fansi_1.0.3          crayon_1.5.1        
+[37] tzdb_0.4.0           dbplyr_2.1.1         withr_2.5.0         
+[40] later_1.3.0          jsonlite_1.8.0       gtable_0.3.0        
+[43] lifecycle_1.0.4      DBI_1.2.2            git2r_0.30.1        
+[46] magrittr_2.0.3       formatR_1.12         scales_1.3.0        
+[49] cli_3.6.1            stringi_1.7.6        farver_2.1.0        
+[52] fs_1.5.2             promises_1.2.0.1     xml2_1.3.3          
+[55] bslib_0.3.1          ellipsis_0.3.2       generics_0.1.2      
+[58] vctrs_0.6.5          lambda.r_1.2.4       tools_4.2.0         
+[61] glue_1.6.2           crosstalk_1.2.0      hms_1.1.1           
+[64] fastmap_1.1.0        yaml_2.3.5           colorspace_2.0-3    
+[67] rvest_1.0.2          knitr_1.39           haven_2.5.0         
+[70] sass_0.4.1          </code></pre>
 </div>
 </div>
 
