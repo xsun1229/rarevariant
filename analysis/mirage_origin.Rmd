@@ -8,6 +8,68 @@ output:
     toc: true
 ---
 
+## Extended gene sets
+
+```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}
+
+genesets <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/genesets/genesets_summary.RDS")
+
+mirage <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_origin.RDS")
+
+num_topgene <- sum(mirage$PP > 0.5)
+mirage_genes <- mirage$Gene[mirage$PP > 0.5]
+all_genes <- mirage$Gene
+
+summary <- c()
+for (i in 1:length(genesets)){
+  
+  genes_inset <- genesets[[i]]
+  
+  num_mirage_gene_in_geneset <- sum(mirage_genes %in% genes_inset)
+  
+  # Create categories
+  mirage_in_set     <- sum(mirage_genes %in% genes_inset)
+  mirage_not_in_set <- length(mirage_genes) -  mirage_in_set 
+  non_mirage_in_set <- sum(setdiff(all_genes, mirage_genes) %in% genes_inset)
+  non_mirage_not_in_set <- length(setdiff(all_genes, mirage_genes)) -  non_mirage_in_set
+  
+  gene_detail <- mirage_genes[mirage_genes %in% genes_inset]
+  
+  # Build 2x2 matrix
+  contingency_table <- matrix(c(
+    mirage_in_set,
+    mirage_not_in_set,
+    non_mirage_in_set,
+    non_mirage_not_in_set
+  ), nrow = 2, byrow = TRUE)
+  
+  colnames(contingency_table) <- c("In_Set", "Not_In_Set")
+  rownames(contingency_table) <- c("MIRAGE", "Non_MIRAGE")
+  
+  # Perform Fisher's Exact Test
+  fisher_res <- fisher.test(contingency_table)
+
+  tmp <- c(names(genesets[i]),length(genes_inset), mirage_in_set, paste0(round(mirage_in_set/length(mirage_genes) *100,2), "%"), 
+           round(fisher_res$p.value,4), round(fisher_res$estimate,4),paste0(gene_detail,collapse = ","))
+  summary <- rbind(summary, tmp)
+  
+}
+
+summary <- as.data.frame(summary)
+colnames(summary) <- c("gene sets", "#of genes in gene set", "#of mirage gene in gene set", "pct of mirage gene in gene set", "FET p", "FET OR", "MIRAGE genes in gene set")
+
+rownames(summary) <- NULL
+
+rownames(summary)[rownames(summary) == "High"] <- "TADA"
+
+DT::datatable(summary,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','FET results for extended gene set'),options = list(pageLength = 10) )
+
+
+
+```
+
+
+
 ## Enrichment in other gene sets
 
 https://pubmed.ncbi.nlm.nih.gov/31981491/ This paper published several data sets we can use. The gene sets are gtex tissue specific genes, prenatal vs. postnatal gene sets.

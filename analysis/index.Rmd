@@ -18,6 +18,8 @@ Revision for rare variant project
 
 [Additional validataion for initial submission](mirage_origin.html)
 
+[MIRAGE results -- lof annotation updated -- use decile](mirage_lofdeconly.html)
+
 Not used
 
 [MIRAGE results -- lof & missense annotation updated](mirage_lofmis.html)

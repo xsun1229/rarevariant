@@ -1,7 +1,7 @@
 ---
-title: "MIRAGE results -- missense annotation updated"
+title: "MIRAGE results -- lof annotation updated  -- lof use decile"
 author: "XSun"
-date: "2025-06-23"
+date: "2025-08-04"
 output:
   workflowr::wflow_html:
     code_folding: hide
@@ -15,89 +15,17 @@ library(ggrepel)
 library(data.table)
 library(tidyr)
 library(gridExtra)
-library(VennDiagram)
-library(tidyverse)
 
-mirage_res <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_misupdated.RDS")
+mirage_res <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/mirage_lofdeconly.RDS")
 
-#cat <- c("high LOEUF oe", "med LOEUF oe", "low LOEUF oe", "likely pathogenic", "ambiguous", "likely benign")
-cat <- c("highPLI", "medPLI", "lowPLI", "likely pathogenic", "ambiguous", "likely benign")
+cat <- c("low LOEUF oe", "med LOEUF oe", "high LOEUF oe", "highMPC", "medMPC", "lowMPC")
+# cat <- c("highPLI", "medPLI", "lowPLI", "likely pathogenic", "ambiguous", "likely benign")
 cat_old <- c("highPLI", "medPLI", "lowPLI", "highMPC", "medMPC", "lowMPC")
-
-# Function to test enrichment with Fisher's exact test
-get_fisher_enrichment <- function(category_genes, category_name) {
-  # Restrict all sets to background to be consistent
-  bg <- background_genes
-  highpip <- intersect(highpip_genes, bg)
-  category <- intersect(category_genes, bg)
-  
-  # Counts for contingency table
-  a <- sum(highpip %in% category)              # HighPIP & In Category
-  b <- sum(highpip %notin% category)           # HighPIP & Not in Category
-  c <- sum((bg %notin% highpip) & (bg %in% category))  # Not HighPIP & In Category
-  d <- sum((bg %notin% highpip) & (bg %notin% category)) # Not HighPIP & Not in Category
-  
-  contingency_table <- matrix(c(a, b, c, d), nrow = 2,
-                              dimnames = list(
-                                HighPIP = c("Yes", "No"),
-                                InCategory = c("Yes", "No")
-                              ))
-  
-  fisher_result <- fisher.test(contingency_table, alternative = "greater")
-  
-  cat("\n", category_name, "\n")
-  print(contingency_table)
-  print(fisher_result)
-}
-
 ```
 
-We are addressing the reviews' comments:
+# Overview of input
 
-```
-R1:
-3)    More rigorous prediction scores (i.e., REVEL, Alpha-missense) can be included for the stratification of missense variants.
-
-
-R2:
-2.  	The authors used the MPC score. I would argue this is now outdated and there are much better tools for assessing missense constaint and pathogenicity.
-```
-
-
-# Updating missense annotation using Alpha-missense score
-
-Alpha-missense score download: https://console.cloud.google.com/storage/browser/dm_alphamissense;tab=objects?pli=1&inv=1&invt=Ab0dvQ&prefix=&forceOnObjectsSortingFiltering=false
-
-Paper: https://www.science.org/doi/10.1126/science.adg7492
-
-The authors compared with alphamissense with other missense annotations: https://www.ebi.ac.uk/training/online/courses/alphafold/classifying-the-effects-of-missense-variants-using-alphamissense/introducing-missense-variants-and-alphamissense/
-
-```
-zcat /project/xinhe/xsun/rare_variants/5.revision/data/alphamis/AlphaMissense_hg38.tsv.gz |head
-# Copyright 2023 DeepMind Technologies Limited
-#
-# Licensed under CC BY-NC-SA 4.0 license
-CHROM  POS     REF     ALT     genome  uniprot_id      transcript_id   protein_variant am_pathogenicity        am_class
-chr1    69094   G       T       hg38    Q8NH21  ENST00000335137.4       V2L     0.2937  likely_benign
-chr1    69094   G       C       hg38    Q8NH21  ENST00000335137.4       V2L     0.2937  likely_benign
-chr1    69094   G       A       hg38    Q8NH21  ENST00000335137.4       V2M     0.3296  likely_benign
-chr1    69095   T       C       hg38    Q8NH21  ENST00000335137.4       V2A     0.2609  likely_benign
-chr1    69095   T       A       hg38    Q8NH21  ENST00000335137.4       V2E     0.2922  likely_benign
-```
-
-```
-| Category          | Min pathogenicity | Max pathogenicity | Total Variants |
-|-------------------|-----------|-----------|----------------|
-| likely_pathogenic | 0.5640    | 1.0000    | 22,770,557     |
-| likely_benign     | 0.0001    | 0.3400    | 40,917,351     |
-| ambiguous         | 0.3400    | 0.5640    | 8,009,648      |
-```
-
-More details for annotaion, see https://xsun1229.github.io/rarevariant/variant_annot.html
-
-# Overview of MIRAGE input
-
-```{r fig.height=4, fig.width=4 , warning=F, message=FALSE}
+```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}
 
 input <- fread("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt")
 print("Old mirage input:")
@@ -107,91 +35,12 @@ old_mirage <- table(input$group.index)[c("1","2","3","4","5","6")]
 names(old_mirage) <- c("highPLI", "medPLI", "lowPLI", "highMPC", "medMPC", "lowMPC")
 print(old_mirage)
 
-print("Missense updated mirage input:")
-mirage_input_mis_updated <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_misupdated.RDS")
+print("LoF & Missense updated mirage input:")
+mirage_input_mis_updated <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_lofdeconly.RDS")
 new_mirage <- table(mirage_input_mis_updated$group.index)[c("1","2","3","4","5","6")]
 names(new_mirage) <- cat
 sprintf("Number of rare-variants = %s",nrow(mirage_input_mis_updated))
 print(new_mirage)
-
-
-highmpc <- input[input$group.index == 4,]
-medmpc <- input[input$group.index == 5,]
-lowmpc <- input[input$group.index == 6,]
-
-lp <- mirage_input_mis_updated[mirage_input_mis_updated$group.index == 4,]
-ab <- mirage_input_mis_updated[mirage_input_mis_updated$group.index == 5,]
-lb <- mirage_input_mis_updated[mirage_input_mis_updated$group.index == 6,]
-
-overlap_highlp <- sum(highmpc$Variant %in% lp$Variant)
-overlap_medab <- sum(medmpc$Variant %in% ab$Variant)
-overlap_lowlb <- sum(lowmpc$Variant %in% lb$Variant)
-
-
-grid.newpage()
-venn.plot <- draw.pairwise.venn(
-  area1 = nrow(highmpc),         # size of A
-  area2 = nrow(lp),         # size of B
-  cross.area = overlap_highlp,   # size of overlap A ∩ B
-  category = c("highmpc", "likely_pathogenic"),
-  fill = c("skyblue", "pink1"),
-  alpha = 0.5,
-  cex = 2,
-  cat.cex = 2,
-  cat.pos = c(-20, 20)
-)
-
-
-```
-
-```{r fig.height=4, fig.width=4 , warning=F, message=FALSE}
-
-grid.newpage()
-venn.plot <- draw.pairwise.venn(
-  area1 = nrow(medmpc),         # size of A
-  area2 = nrow(ab),         # size of B
-  cross.area = overlap_medab,   # size of overlap A ∩ B
-  category = c("medmpc", "ambiguous "),
-  fill = c("skyblue", "pink1"),
-  alpha = 0.5,
-  cex = 2,
-  cat.cex = 2,
-  cat.pos = c(-20, 20)
-)
-
-```
-
-```{r fig.height=4, fig.width=4 , warning=F, message=FALSE}
-grid.newpage()
-
-venn.plot <- draw.pairwise.venn(
-  area1 = nrow(lowmpc),         # size of A
-  area2 = nrow(lb),         # size of B
-  cross.area = overlap_lowlb,   # size of overlap A ∩ B
-  category = c("lowmpc", "likely_benign"),
-  fill = c("skyblue", "pink1"),
-  alpha = 0.5,
-  cex = 2,
-  cat.cex = 2,
-  cat.pos = c(-20, 20)
-)
-
-
-# venn.plot <- draw.pairwise.venn(
-#   area1 = nrow(highmpc),         # size of A
-#   area2 = nrow(lb),         # size of B
-#   cross.area = overlap_highlp,   # size of overlap A ∩ B
-#   category = c("highmpc", "likely_benign"),
-#   fill = c("skyblue", "pink1"),
-#   alpha = 0.5,
-#   cex = 2,
-#   cat.cex = 2,
-#   cat.pos = c(-20, 20)
-# )
-# 
-# # To plot in RStudio Viewer
-# grid.newpage()
-# grid.draw(venn.plot)
 ```
 
 
@@ -241,7 +90,7 @@ print(p)
 
 ```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
 
-gene_pip <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_misupdated.RDS")
+gene_pip <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_lofdeconly.RDS")
 
 DT::datatable(gene_pip,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Gene-level results'),options = list(pageLength = 10) )
 
@@ -319,7 +168,7 @@ print(manhplot)
 
 ```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
 
-dat <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/BFpartition_misupdated.RDS")
+dat <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/BFpartition_lofdeconly.RDS")
 
 dat_select <- dat[dat$PP > 0.5 & !is.na(dat$PP),]
 dat_select <- dat_select[,c("Gene","BF","g1_BF","g2_BF","g3_BF","g4_BF","g5_BF","g6_BF")]
@@ -350,7 +199,7 @@ dat_select$sum_bf <- rowSums(dat_select[,3:8])
 dat_select$Gene <- factor(dat_select$Gene, levels = dat_select$Gene)
 
 df_long <- dat_select %>%
-  dplyr::select(Gene, highPLI, medPLI, lowPLI, `likely pathogenic`, ambiguous, `likely benign`) %>%
+  dplyr::select(Gene, `low LOEUF oe`, `med LOEUF oe`, `high LOEUF oe`,  highMPC, medMPC, lowMPC) %>%
   tidyr::pivot_longer(cols = -Gene, names_to = "variant_type", values_to = "value")
 
 
@@ -376,15 +225,20 @@ p <- ggplot(df_long, aes(x = Gene, y = value, fill = `Variant Group`)) +
 print(p)
 ```
 
+
+
 # Validation 
 
 ## Enrichment results
+
+### gene sets in initial submission 
+
 
 ```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
 
 num_topgenes <- sum(gene_pip$PP > 0.5)
 
-load("/project/xinhe/xsun/rare_variants/5.revision/results/enrichment_misupdated.rdata")
+load("/project/xinhe/xsun/rare_variants/5.revision/results/enrichment_lofdeconly.rdata")
 
 df_sum <- df_sum[-which(rownames(df_sum) == "constraint gene"),]
 df_sum <- df_sum[-which(rownames(df_sum) == "AutismKB"),]
@@ -403,9 +257,10 @@ order <- c("SFARI","TADA","ID","SCZ","FMRP target","PSD","RVIS","HI")
 
 
 df_plot <- df_sum[,c("overlap_rate_mirage","overlap_rate_burden_combined","overlap_rate_burden_lof","overlap_rate_acat","overlap_rate_all")]
+#colnames(df_plot) <- c("Top 20 genes by MIRAGE","Top 20 genes by burden test (MPC>2&LoF)","Top 20 genes by burden test (LoF)","Top 20 genes by ACAT","All genes")
 colnames(df_plot) <- c(
   sprintf("Top %d genes by MIRAGE", num_topgenes),
-  sprintf("Top %d genes by burden test (likely pathogenic&LoF)", num_topgenes),
+  sprintf("Top %d genes by burden test (likely pathogenic &LoF)", num_topgenes),
   sprintf("Top %d genes by burden test (LoF)", num_topgenes),
   sprintf("Top %d genes by ACAT", num_topgenes),
   "All genes"
@@ -433,113 +288,16 @@ print(p)
 
 
 
-## Enrichment in other gene sets
-
-https://pubmed.ncbi.nlm.nih.gov/31981491/ This paper published several data sets we can use. The gene sets are gtex tissue specific genes, prenatal vs. postnatal gene sets.
-
-Some gene sets were downloaded here https://github.com/BreenMS/Rapid-gene-set-enrichment
-
-
-```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
-
-gene_pp_bf_posadded_misupdated <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_misupdated.RDS")
-
-```
-
-### GTEx brain tissue specific genes
-
-We did Fisher exact test to check if the genes with PP>0.5 are enriched in the tissue-specific gene sets. 
-
-```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
-
-merged_df <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/validation_gtex_brain_misupdated.RDS")
-
-DT::datatable(merged_df,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;',' Brain tissue upregulated genes and overlap with MIRAGE genes'),options = list(pageLength = 10) )
-
-merged_df <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/validation_gtex_nonbrain_misupdated.RDS")
-
-
-DT::datatable(merged_df,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;',' non-Brain tissue upregulated genes and overlap with MIRAGE genes'),options = list(pageLength = 10) )
-
-```
-
-### prenatal, postnatal, unbiased gene sets
-
-We did Fisher exact test to check if the genes with PP>0.5 are enriched in the prenatal/postnatal/unbiased gene sets. 
-
-```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
-
-braineffect <-  readxl::read_excel("/project/xinhe/xsun/rare_variants/5.revision/data/brain_de/BrainSpan_FetalEffect.xlsx")
-
-prenatal <- braineffect[braineffect$FetalEffect == "Prenatal",]
-unbiased <- braineffect[braineffect$FetalEffect == "Unbiased",]
-postnatal <- braineffect[braineffect$FetalEffect == "Postnatal",]
-
-print(paste0("Prenatal gene number =", nrow(prenatal)))
-print(paste0("Postnatal gene number =", nrow(postnatal)))
-print(paste0("Unbiased gene number =", nrow(unbiased)))
-
-print("Genes with PP > 0.5")
-highpip <- gene_pp_bf_posadded_misupdated[gene_pp_bf_posadded_misupdated$PP > 0.5,]
-
-# Define sets
-highpip_genes <- highpip$Gene
-prenatal_genes <- prenatal$GeneSymbol
-postnatal_genes <- postnatal$GeneSymbol
-unbiased_genes <- unbiased$GeneSymbol
-
-background_genes <- gene_pp_bf_posadded_misupdated$Gene
-
-
-# Define `%notin%` for convenience
-`%notin%` <- Negate(`%in%`)
-
-print("Prenatal")
-print(highpip$Gene[highpip$Gene %in% prenatal$GeneSymbol])
-get_fisher_enrichment(prenatal_genes, "Prenatal")
-
-print("Postnatal")
-print(highpip$Gene[highpip$Gene %in% postnatal$GeneSymbol])
-get_fisher_enrichment(postnatal_genes, "Postnatal")
-
-print("Unbiased")
-print(highpip$Gene[highpip$Gene %in% unbiased$GeneSymbol])
-get_fisher_enrichment(unbiased_genes, "Unbiased")
-
-
-```
 
 
 
-
-### Single cell expression data, 
-
-To assess whether the ASD genes are enriched in specific cell types (clusters), we used a background set of 7,867 genes expressed in the experiment. For each cell type, they built a 2×2 table comparing the number of ASD genes expressed versus not expressed, and the number of non-ASD genes expressed versus not expressed. Enrichment was evaluated using odds ratios and Fisher’s exact test.
-
-Within each cell type cluster, a gene was considered expressed if one or more of its transcripts were detected in 25% or more cells
-
-```{r fig.height=5, fig.width=9, warning=F, message=FALSE}
-
-fisher_res <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/validation_scrna_fet_misupdated.RDS")
-
-DT::datatable(fisher_res,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Fisher results for the ASD genes'),options = list(pageLength = 10) )
-
-cluster_member <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/validation_scrna_expr_binary_misupdated.RDS")
-
-DT::datatable(cluster_member,caption = htmltools::tags$caption( style = 'caption-side: left; text-align: left; color:black;  font-size:150% ;','Cluster membership for the ASD genes'),options = list(pageLength = 10) )
-
-```
-
-
-
-
-## Extended gene sets
+### Extended gene sets
 
 ```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}
 
 genesets <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/data/genesets/genesets_summary.RDS")
 
-mirage <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_misupdated.RDS")
+mirage <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/mirage_res/gene_pp_bf_posadded_lofdeconly.RDS")
 
 num_topgene <- sum(mirage$PP > 0.5)
 mirage_genes <- mirage$Gene[mirage$PP > 0.5]
@@ -593,28 +351,26 @@ DT::datatable(summary,caption = htmltools::tags$caption( style = 'caption-side: 
 ```
 
 
-
 # Other methods
 
 ```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}
 
 source("/project/xinhe/xsun/r_functions/qqplot_multi.R")
 
-burden_pvalues <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/burden_pvalues_misupdated.RDS")
+burden_pvalues <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/burden_pvalues_lofdeconly.RDS")
 burden_pvalues <- as.data.frame(burden_pvalues)
 
-ACAT <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/acat_misupdated.RDS")
+ACAT <- readRDS("/project/xinhe/xsun/rare_variants/5.revision/results/acat_lofdeconly.RDS")
 
 
 pvalues <- list('Burden test (LoF)' = burden_pvalues$LoF_pvalue,
-                'Burden test (likely pathogenic &LoF)' = burden_pvalues$fisher_combine_pvalue, 
+                'Burden test (likely pathogenic & LoF)' = burden_pvalues$fisher_combine_pvalue, 
                 'ACAT' = ACAT$ACAT_pvalue)
 
-p <- qqplot_multi(pvalues_list = pvalues,legend_names = c('Burden test (LoF)','Burden test (likely pathogenic &LoF)','ACAT'))
+p <- qqplot_multi(pvalues_list = pvalues,legend_names = c('Burden test (LoF)','Burden test (likely pathogenic & LoF)','ACAT'))
 
 print(p)
 ```
-
 
 
 # Comparing with results in initial submission
@@ -660,6 +416,7 @@ p2 <- ggplot(compare, aes(x = post_prob_old, y = post_prob_new)) +
 grid.arrange(p1, p2,  ncol = 2)
 
 genes_diff <- compare[!is.na(compare$label),]
+
 
 cat_compare <- c("highPLI", "medPLI", "lowPLI", "highMPC/likely pathogenic", "medMPC/ambiguous", "lowMPC/likely benign")
 mirage_input_old <- data.table::fread("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt")
