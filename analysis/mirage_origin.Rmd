@@ -8,6 +8,30 @@ output:
     toc: true
 ---
 
+## Gene Functions
+
+
+| Gene    | BF       | PP       | FDR      | Functions                                                                                                                                |
+|---------|----------|----------|----------|------------------------------------------------------------------------------------------------------------------------------------------|
+| PLXNA1  | 164.7979 | 0.896626 | 0.103374 | Transmembrane receptor. Essential for axon guidance.                                                                                     |
+| MYH10   | 126.2861 | 0.869224 | 0.117075 | Myosin heavy chain. Microcephaly, developmental delay, known ASD gene.                                                                   |
+| PCYOX1L | 92.24162 | 0.829201 | 0.134983 | Associated with Freemartinism, sexual development                                                                                        |
+| PTPRF   | 72.06389 | 0.791355 | 0.153399 | Protein tyrosine phosphatase family. Synapse formation and differentiation.                                                              |
+| NAV3    | 45.84302 | 0.706985 | 0.190245 | Neuron navigator 3. Axon guidance, known ASD gene.                                                                                       |
+| ARAP2   | 45.05607 | 0.703385 | 0.205441 | A protein in Rho-GTPase signaling, implicated in ASD.                                                                                    |
+| SF3B3   | 32.5544  | 0.631457 | 0.240467 | Spliceosome component                                                                                                                    |
+| IL1R2   | 31.72854 | 0.625457 | 0.253874 | Cytokine decoy receptor for IL‑1, SFARI score 2; de novo SNP reported                                                                    |
+| ATP2B2  | 30.64572 | 0.617288 | 0.265587 | PMCA2 Ca²⁺ pump in neurons. Genetic association with ASD and de novo variants                                                            |
+| LMNB1   | 30.5718  | 0.61672  | 0.169691 | Encodes Lamin B1; essential for neuronal migration; mutations cause CNS disorder                                                         |
+| BTG3    | 30.49323 | 0.616109 | 0.275445 | Antiproliferative; neurogenesis potential                                                                                                |
+| MFSD10  | 28.69924 | 0.601671 | 0.284898 | Organic anion transporter                                                                                                                |
+| AHNAK   | 26.83769 | 0.58549  | 0.224457 | Scaffold; regulates neuronal Ca²⁺ channels, BBB, differentiation. Emerging ASD candidate; methylation signal                             |
+| OR52A5  | 25.43475 | 0.572407 | 0.295091 | Olfactory receptor                                                                                                                       |
+| PAN2    | 22.02574 | 0.536876 | 0.306293 | mRNA deadenylation                                                                                                                       |
+| SYNGAP1 | 21.46777 | 0.530491 | 0.316494 | Synaptic plasticity regulator                                                                                                            |
+| MYO5C   | 20.97511 | 0.524704 | 0.325835 | Vesicle/organelle transport via actin                                                                                                    |
+| KATNAL1 | 20.89591 | 0.523761 | 0.334191 | Regulates neuronal development, migration, and behavior, with loss-of-function linked to brain abnormalities and ciliary defects in mice |
+
 ## Extended gene sets
 
 ```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}

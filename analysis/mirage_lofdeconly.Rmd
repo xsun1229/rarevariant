@@ -229,6 +229,33 @@ print(p)
 
 # Validation 
 
+## Gene functions
+
+**The bolded ones are the new genes that not identified by initial submission**
+
+| Gene        | BF           | PP           | FDR          | Functions                                                                        |
+|-------------|--------------|--------------|--------------|----------------------------------------------------------------------------------|
+| PLXNA1      | 316.6647     | 0.943396     | 0.056604     | Transmembrane receptor. Essential for axon guidance.                             |
+| PCYOX1L     | 105.796      | 0.847752     | 0.104426     | Associated with Freemartinism, sexual development                                |
+| MYH10       | 89.17553     | 0.82436      | 0.128164     | Myosin heavy chain. Microcephaly, developmental delay, known ASD gene.           |
+| ARAP2       | 61.20125     | 0.763096     | 0.155349     | A protein in Rho-GTPase signaling, implicated in ASD.                            |
+| LMNB1       | 60.5662      | 0.761205     | 0.172038     | Encodes Lamin B1; essential for neuronal migration; mutations cause CNS disorder |
+| **SLC5A6**  | **45.88393** | **0.707169** | **0.19217**  | **Biotin/pantothenic acid transport across blood brain barrier**                 |
+| PTPRF       | 45.8515      | 0.707023     | 0.206571     | Protein tyrosine phosphatase family. Synapse formation and differentiation.      |
+| **UBR1**    | **44.55561** | **0.701049** | **0.218119** | **N-end rule E3 ubiquitin ligase; protein QC**                                   |
+| BTG3        | 40.35893     | 0.679913     | 0.229449     | Antiproliferative; neurogenesis potential                                        |
+| SF3B3       | 38.25422     | 0.668147     | 0.239689     | Pre‑mRNA splicing factor                                                         |
+| **TRAK1**   | **33.86689** | **0.640607** | **0.250571** | **Mitochondrial transport in neurons**                                           |
+| SYNGAP1     | 32.81031     | 0.633278     | 0.260251     | Synaptic Ras‑GAP; synaptic plasticity                                            |
+| IL1R2       | 29.27636     | 0.606433     | 0.270506     | Decoy IL‑1 receptor regulating inflammation                                      |
+| **SV2B**    | **28.12839** | **0.596846** | **0.279981** | **Synaptic vesicle release modulation**                                          |
+| NAV3        | 27.84933     | 0.594445     | 0.288352     | Axon guidance / neuronal migration                                               |
+| MYO5C       | 26.66308     | 0.583909     | 0.296336     | Motor protein for vesicle/organelle transport                                    |
+| PAN2        | 25.81673     | 0.576051     | 0.303843     | mRNA deadenylation                                                               |
+| ATP2B2      | 25.72282     | 0.575161     | 0.310565     | Ca²⁺ extrusion pump (PMCA isoform)                                               |
+| **NCKAP5L** | **23.29762** | **0.550802** | **0.317861** | **Actin regulation; potential neural role**                                      |
+
+
 ## Enrichment results
 
 ### gene sets in initial submission 

@@ -376,7 +376,35 @@ p <- ggplot(df_long, aes(x = Gene, y = value, fill = `Variant Group`)) +
 print(p)
 ```
 
-# Validation 
+# Validation
+
+## Gene functions
+
+**The bolded ones are the new genes that not identified by initial submission**
+
+| ARAP2       | 243.4156     | 0.927596     | 0.072404     | A protein in Rho-GTPase signaling, implicated in ASD.                                                                                    |
+|-------------|--------------|--------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| **PRTG**    | **149.1478** | **0.887004** | **0.0927**   | **Marks early neural progenitors and helps prevent premature neuronal differentiation, reported as novel ASD genes**                     |
+| PTPRF       | 148.9174     | 0.886849     | 0.099517     | Protein tyrosine phosphatase family. Synapse formation and differentiation.                                                              |
+| **OR52A5**  | **121.3102** | **0.864586** | **0.108491** | **Encodes an olfactory receptor that detects odorants to trigger smell perception.**                                                     |
+| PCYOX1L     | 98.35327     | 0.838096     | 0.119174     | Associated with Freemartin-ism, sexual development                                                                                       |
+| **LINGO2**  | **78.52239** | **0.805173** | **0.131783** | **Its soluble form promotes excitatory synapse formation and is associated with ASD**                                                    |
+| **OR11H6**  | **64.37471** | **0.772113** | **0.145512** | **Encodes an olfactory receptor involved in detecting odorants to initiate smell perception.**                                           |
+| MYH10       | 58.56017     | 0.755029     | 0.157944     | Myosin heavy chain. Micro-cephaly, developmental delay, known ASD gene.                                                                  |
+| KATNAL1     | 43.80999     | 0.6975       | 0.174006     | Regulates neuronal development, migration, and behavior, with loss-of-function linked to brain abnormalities and ciliary defects in mice |
+| LMNB1       | 41.1177      | 0.683953     | 0.18821      | Encodes Lamin B1; essential for neuronal migration; mutations cause CNS disorder                                                         |
+| **USP31**   | **38.96737** | **0.672229** | **0.200897** | **Deubiquitinase; regulates NF‑κB signaling and inflammation pathways**                                                                  |
+| MFSD10      | 36.81086     | 0.659565     | 0.212526     | Major Facilitator Superfamily transporter; exports organic anions (e.g., NSAIDs)                                                         |
+| **OXER1**   | **35.16301** | **0.649207** | **0.223162** | **GPCR for oxoeicosanoids; involved in intracellular Ca²⁺ signaling**                                                                    |
+| AHNAK       | 28.92244     | 0.603526     | 0.235541     | Scaffold; regulates neuronal Ca²⁺ channels, BBB, differentiation. Emerging ASD candidate; methylation signal                             |
+| **SLC5A6**  | **28.49482** | **0.599956** | **0.246508** | **Sodium-dependent transporter for biotin, pantothenate, lipoate**                                                                       |
+| **DYNC1H1** | **24.90788** | **0.567276** | **0.258146** | **Dynein motor protein; retrograde axonal transport, neuronal migration**                                                                |
+| **PDS5B**   | **23.19339** | **0.549693** | **0.26945**  | **Cohesin regulator; sister chromatid cohesion, chromatin looping**                                                                      |
+| **PTPRE**   | **23.11443** | **0.548848** | **0.279544** | **Receptor-type tyrosine phosphatase; signaling via AKT, ERK, integrins**                                                                |
+| PAN2        | 21.83686     | 0.534734     | 0.289319     | mRNA deadenylation                                                                                                                       |
+| **OSBPL3**  | **20.67887** | **0.521156** | **0.298796** | **Oxysterol-binding protein family; lipid transport and membrane contact sites**                                                         |
+| **SV2B**    | **19.7254**  | **0.509366** | **0.307931** | **Synaptic vesicle glycoprotein; neurotransmitter release modulatio**                                                                    |
+
 
 ## Enrichment results
 
