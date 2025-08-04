@@ -545,15 +545,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttreeddb3b5baedf82eada4f44149670eafacc1b06368targetblankddb3b5ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree87c620db77caa7797c9309e89271afcf56105a1etargetblank87c620da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/xsun1229/rarevariant/tree/ddb3b5baedf82eada4f44149670eafacc1b06368" target="_blank">ddb3b5b</a>
+<a href="https://github.com/xsun1229/rarevariant/tree/87c620db77caa7797c9309e89271afcf56105a1e" target="_blank">87c620d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttreeddb3b5baedf82eada4f44149670eafacc1b06368targetblankddb3b5ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomxsun1229rarevarianttree87c620db77caa7797c9309e89271afcf56105a1etargetblank87c620da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -563,7 +563,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/xsun1229/rarevariant/tree/ddb3b5baedf82eada4f44149670eafacc1b06368" target="_blank">ddb3b5b</a>.
+<a href="https://github.com/xsun1229/rarevariant/tree/87c620db77caa7797c9309e89271afcf56105a1e" target="_blank">87c620d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -579,8 +579,6 @@ were generated:
 <pre><code>
 Unstaged changes:
     Modified:   analysis/mirage_lofdeconly.Rmd
-    Modified:   analysis/mirage_mis.Rmd
-    Modified:   analysis/mirage_origin.Rmd
 
 </code></pre>
 <p>
@@ -626,6 +624,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/xsun1229/rarevariant/blob/87c620db77caa7797c9309e89271afcf56105a1e/analysis/mirage_lofdeconly.Rmd" target="_blank">87c620d</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-08-04
+</td>
+<td>
+update
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/xsun1229/rarevariant/87c620db77caa7797c9309e89271afcf56105a1e/docs/mirage_lofdeconly.html" target="_blank">87c620d</a>
+</td>
+<td>
+XSun
+</td>
+<td>
+2025-08-04
+</td>
+<td>
+update
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -681,6 +713,12 @@ cat &lt;- c(&quot;low LOEUF oe&quot;, &quot;med LOEUF oe&quot;, &quot;high LOEUF
 cat_old &lt;- c(&quot;highPLI&quot;, &quot;medPLI&quot;, &quot;lowPLI&quot;, &quot;highMPC&quot;, &quot;medMPC&quot;, &quot;lowMPC&quot;)</code></pre>
 <div id="overview-of-input" class="section level1">
 <h1>Overview of input</h1>
+<p>LoF Annotation Grouping (by Decile):</p>
+<p>Group 1: LoF decile = 1 Group 2: LoF decile = 2 or 3 Group 3: LoF
+decile = 4 to 10</p>
+<pre><code>quantile(mirage_input_updated$lof, probs = seq(0, 1, 0.1), na.rm = TRUE)
+0%      10%      20%      30%      40%      50%      60%      70%      80%      90%     100% 
+0.000000 0.437728 0.563360 0.648770 0.713100 0.770100 0.826110 0.887400 0.961480 1.083500 4.166300 </code></pre>
 <pre class="r"><code>input &lt;- fread(&quot;/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt&quot;)
 print(&quot;Old mirage input:&quot;)</code></pre>
 <pre><code>[1] &quot;Old mirage input:&quot;</code></pre>

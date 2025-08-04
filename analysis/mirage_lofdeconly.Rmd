@@ -25,6 +25,19 @@ cat_old <- c("highPLI", "medPLI", "lowPLI", "highMPC", "medMPC", "lowMPC")
 
 # Overview of input
 
+LoF Annotation Grouping (by Decile):
+
+Group 1: LoF decile = 1
+Group 2: LoF decile = 2 or 3
+Group 3: LoF decile = 4 to 10
+
+```
+quantile(mirage_input_updated$lof, probs = seq(0, 1, 0.1), na.rm = TRUE)
+0%      10%      20%      30%      40%      50%      60%      70%      80%      90%     100% 
+0.000000 0.437728 0.563360 0.648770 0.713100 0.770100 0.826110 0.887400 0.961480 1.083500 4.166300 
+```
+
+
 ```{r fig.height=3, fig.width=5 , warning=F, message=FALSE}
 
 input <- fread("/project/xinhe/xsun/rare_variants/5.revision/data/mirage_input_20231013.txt")
